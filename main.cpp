@@ -14,6 +14,8 @@ int main() {
     srand((unsigned)time(0));
 
     int next = 0;
+    int coefs[7];
+    int *dataset;
 
     while (next >= 0) {
         switch (next) {
@@ -33,7 +35,10 @@ int main() {
                 next = generate_method_menu() + GENERATE_PAGE_SHIFT;
                 break;
             case 4:
-                cout << get_random_from_0_to_1() << endl;
+                
+                for (int i = 0; i< 100; i++){
+                    cout << modeling_random_x(1, 0,0) << endl;
+                }
                 next = 0;
                 break;
             case 5:

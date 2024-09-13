@@ -11,6 +11,8 @@ using namespace std;
 
 float get_random_from_0_to_1();
 
+float modeling_random_x(float nu_coef, float mu_coef, float lambda_coef);
+
 //int get_density_by_coefs(float x, float nu_coef, float mu_coef, float lambda_coef) {
 //    return 1 / (2 * beta(nu_coef + 1, nu_coef + 1)) * pow((1 - pow(((x - mu_coef) / lambda_coef), 2)) / 4, nu_coef);
 //}
