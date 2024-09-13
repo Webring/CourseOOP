@@ -6,7 +6,8 @@
 
 using namespace std;
 
-int select_sample_menu(bool add_mixed_sample);
-
+void params_show(const float *params_begin, const float *params_end);
+int main_menu();
+int generate_method_menu();
 
 #endif //OOP_MENU_H

@@ -8,4 +8,6 @@ add_executable(oop
         main.cpp
         menu.cpp
         menu.h
+        math.cpp
+        math.h
 )
