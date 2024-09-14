@@ -11,7 +11,10 @@ using namespace std;
 int main() {
     setlocale(LC_ALL, "Russian");
 
-    srand((unsigned)time(0));
+    srand(time(0));
+
+    float data[] = {1, 2, 3, 4};
+    cout << get_excess_by_dataset(begin(data), end(data)) << endl;
 
     int next = 0;
     int coefs[7];
@@ -35,9 +38,8 @@ int main() {
                 next = generate_method_menu() + GENERATE_PAGE_SHIFT;
                 break;
             case 4:
-                
-                for (int i = 0; i< 100; i++){
-                    cout << modeling_random_x(1, 0,0) << endl;
+                for (int i = 0; i < 100; i++) {
+                    cout << modeling_random_x(1, 0, 0) << endl;
                 }
                 next = 0;
                 break;
