@@ -80,7 +80,7 @@ float get_asymmetry_by_dataset(const float *dataset_begin, const float *dataset_
     return (sum / counter) / pow(dispersion, 1.5);
 }
 
-int get_mix_density_by_coefs(float x, float nu_coef_1, float mu_coef_1, float lambda_coef_1, float nu_coef_2,
+float get_mix_density_by_coefs(float x, float nu_coef_1, float mu_coef_1, float lambda_coef_1, float nu_coef_2,
                              float mu_coef_2, float lambda_coef_2, float p) {
     return (1 - p) * get_density_by_coefs(x, nu_coef_1, mu_coef_1, lambda_coef_1) + p * get_density_by_coefs(
                x, nu_coef_2, mu_coef_2, lambda_coef_2);
@@ -142,6 +142,40 @@ float get_mix_asymmetry_by_coefs(float nu_coef_1, float mu_coef_1, float lambda_
 }
 
 
-float get_density_by_dataset(float *dataset) {
+float get_density_by_dataset(float x, float *dataset_begin, float *dataset_end) {
+    int len_of_dataset = dataset_end - dataset_begin;
+    float k;
+    if(len_of_dataset>=50){
+        k = 1 + 3.322 * log10(len_of_dataset);
+    }
+    else{
+        k = 8;
+    }
+    float min = *dataset_begin;
+    float max = *dataset_begin;
+    float *temp = dataset_begin;
 
+    while (temp < dataset_end) {
+        if (*temp < min) {
+            min = *temp;
+        }
+        if (*temp > max) {
+            max = *temp;
+        }
+        temp ++;
+    }
+    float r = max - min;
+    float h = r/k;
+    float x_first = min - h*0.5;
+    float x_left = x_first + floor((x - x_first) / h) * h;
+    float x_right = x_left + h;
+    float count = 0;
+    temp = dataset_begin;
+    for(int i=0; i<len_of_dataset;i++){
+        if(*temp >= x_left and *temp<x_right){
+            count++;
+        }
+        temp++;
+    }
+    return count/len_of_dataset;
 }
