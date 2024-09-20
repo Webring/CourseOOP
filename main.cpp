@@ -4,17 +4,21 @@
 #include "time.h"
 
 #define GENERATE_PAGE_SHIFT 5
+// #define
 #define MAIN_MENU_PAGE 0
 
 using namespace std;
 
 int main() {
-    setlocale(LC_ALL, "ru_RU.UTF-8");
+#if defined(_WIN32) || defined(__CYGWIN__)
+    system("chcp 65001");
+#endif
+
 
     srand(time(0));
 
 
-    int next = 0;
+    int next = MAIN_MENU_PAGE;
     float coefs[7];
     float *dataset = nullptr;
     int dataset_len = 0;
@@ -57,10 +61,10 @@ int main() {
                         break;
                 }
                 params_show(begin(values), end(values));
-                next = 0;
+                next = MAIN_MENU_PAGE;
                 break;
             case 2:
-                next = 0;
+                next = MAIN_MENU_PAGE;
                 if (not datatype) {
                     cout << "Не заданы данные!" << endl;
                     break;
@@ -88,7 +92,7 @@ int main() {
                 next = datatype + GENERATE_PAGE_SHIFT;
                 break;
             case 4:
-                next = 0;
+                next = MAIN_MENU_PAGE;
                 if (not datatype) {
                     cout << "Не заданы данные!" << endl;
                     break;
@@ -99,20 +103,20 @@ int main() {
                 }
                 break;
             case 5:
-                next = 0;
+                next = MAIN_MENU_PAGE;
                 if (not datatype) {
                     cout << "Не заданы данные!" << endl;
                     break;
                 }
-                float* new_dataset;
-                new_dataset = modeling_sample_based_on_density(dataset_len,dataset, dataset+dataset_len);
+                float *new_dataset;
+                new_dataset = modeling_sample_based_on_density(dataset_len, dataset, dataset + dataset_len);
                 dataset = new_dataset;
                 break;
             case 6:
                 for (int i = 3; i < 7; i++) {
                     coefs[i] = 0;
                 }
-                cout << "Введите значение nu (параметр распределения)" << endl;
+                cout << "Введите значение nu (параметр формы)" << endl;
                 coefs[0] = input_number(0.f, 100000.f);
                 cout << "Введите значение mu (сдвиг по x)" << endl;
                 coefs[1] = input_number(-100000.f, 100000.f);
@@ -125,16 +129,16 @@ int main() {
                     dataset[i] = modeling_random_x(coefs[0], coefs[1], coefs[2]);
                 }
                 cout << "Данные успешно заданы" << endl;
-                next = 0;
+                next = MAIN_MENU_PAGE;
                 break;
             case 7:
-                cout << "Введите значение nu_1 (параметр в распределении)" << endl;
+                cout << "Введите значение nu_1 (параметр формы)" << endl;
                 coefs[0] = input_number(0.f, 100000.f);
                 cout << "Введите значение mu_1 (сдвиг по x)" << endl;
                 coefs[1] = input_number(-100000.f, 100000.f);
                 cout << "Введите значение lambda_1 (параметр маштаба)" << endl;
                 coefs[2] = input_number(0.f, 100000.f);
-                cout << "Введите значение nu_2 (параметр в распределении)" << endl;
+                cout << "Введите значение nu_2 (параметр формы)" << endl;
                 coefs[3] = input_number(0.f, 100000.f);
                 cout << "Введите значение mu_2 (сдвиг по x)" << endl;
                 coefs[4] = input_number(-100000.f, 100000.f);
@@ -151,7 +155,7 @@ int main() {
                                                        coefs[6]);
                 }
                 cout << "Данные успешно заданы" << endl;
-                next = 0;
+                next = MAIN_MENU_PAGE;
                 break;
             case 8:
                 cout << "Введите количство чисел. " << endl;
@@ -161,11 +165,11 @@ int main() {
                     dataset[i] = input_number(-100000.f, 100000.f);
                 }
                 cout << "Данные успешно заданы" << endl;
-                next = 0;
+                next = MAIN_MENU_PAGE;
                 break;
             default:
                 cout << "Произошла ошибка! Возвращаемся в основное меню" << endl;
-                next = 0;
+                next = MAIN_MENU_PAGE;
         }
     }
     return 0;

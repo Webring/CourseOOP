@@ -66,7 +66,7 @@ int main_menu(){
     cout << "2) Найти плотность" << endl;
     cout << "3) Генерация данных" << endl;
     cout << "4) Вывести данные" << endl;
-    cout << "5) " << endl;
+    cout << "5) Получение выборки по функции" << endl;
 
     return select_menu_item(5);
 }
