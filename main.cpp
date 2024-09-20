@@ -106,7 +106,7 @@ int main() {
                 cout << "¬ведите значение mu (сдвиг по x)" << endl;
                 coefs[1] = input_number(-100000.f, 100000.f);
                 cout << "¬ведите значение lambda (параметр маштаба)" << endl;
-                coefs[2] = input_number(0.f, 100.f);
+                coefs[2] = input_number(0.f, 100000.f);
                 cout << "¬ведите количство чисел в выборке: " << endl;
                 dataset_len = input_number(1, 1000000);
                 dataset = new float[dataset_len];
