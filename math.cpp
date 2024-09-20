@@ -26,7 +26,7 @@ float get_expectation_by_coefs(float nu_coef, float mu_coef, float lambda_coef) 
 }
 
 float get_dispersion_by_coefs(float nu_coef, float mu_coef, float lambda_coef) {
-    return pow(lambda_coef, 4) * (1 / (2 * nu_coef + 3));
+    return pow(lambda_coef, 2) * (1 / (2 * nu_coef + 3));
 }
 
 float get_excess_by_coefs(float nu_coef, float mu_coef, float lambda_coef) {
@@ -184,7 +184,7 @@ float get_density_by_dataset(float x, float *dataset_begin, float *dataset_end) 
     return count / len_of_dataset;
 }
 
-void get_density_massive(float *dataset_begin, float *dataset_end, float*& ni_begin, float*& ni_end){
+int get_density_massive(float *dataset_begin, float *dataset_end, float*& ni_begin, float*& ni_end){
     int len_of_dataset = dataset_end - dataset_begin;
     int k;
     if (len_of_dataset >= 50) {
@@ -208,35 +208,40 @@ void get_density_massive(float *dataset_begin, float *dataset_end, float*& ni_be
     float r = max - min;
     float h = r / k;
     float x_first = min - h * 0.5;
-    float* ni = new float[k + 2];
+    ni_begin = new float[k + 2];
     float x_left = x_first;
     float x_right;
     for(int j=0;j<k;j++){
-        x_right = x_first + h;
+        ni_begin[j] = 0;
+        x_right = x_first + h*(j+1);
         temp = dataset_begin;
         for(int i=0;i<len_of_dataset;i++){
             if(*temp<x_right and *temp>=x_left){
-                ni[j] ++;
+                ni_begin[j] ++;
             }
             temp++;
         }
         x_left = x_right;
     }
-    ni[k] = float(x_first);
-    ni[k+1] = float(h);
-    ni_begin = new float(ni[0]);
-    ni_end = new float(ni[k+1]);
+    ni_begin[k] = float(x_first);
+    ni_begin[k+1] = float(h);
+//    ni_begin = new float(ni_begin[0]);
+    ni_end = new float(ni_begin[k+1]);
+    return k;
 }
 
 float* modeling_sample_based_on_density(int sample_volume, float *dataset_begin, float *dataset_end){
+
+
     float* ni_begin;
     float* ni_end;
-    get_density_massive(dataset_begin,dataset_end, ni_begin, ni_end);
 
-    int h = *ni_end;
+    int k = get_density_massive(dataset_begin,dataset_end, ni_begin, ni_end);
+    ni_end  = ni_begin + k+1 ;
+    float h = *ni_end;
     float x_first = *(ni_end-1);
     float* new_end = ni_end-2;
-    int ni_volume = new_end-ni_begin;
+    int ni_volume = k;
 
     float* new_samples = new float[sample_volume];
     int index = 0;
