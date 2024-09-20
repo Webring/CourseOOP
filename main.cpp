@@ -3,15 +3,16 @@
 #include "math.h"
 #include "time.h"
 
-#define GENERATE_PAGE_SHIFT 4
+#define GENERATE_PAGE_SHIFT 5
 #define MAIN_MENU_PAGE 0
 
 using namespace std;
 
 int main() {
-    setlocale(LC_ALL, "Russian");
+    setlocale(LC_ALL, "ru_RU.UTF-8");
 
     srand(time(0));
+
 
     int next = 0;
     float coefs[7];
@@ -61,10 +62,10 @@ int main() {
             case 2:
                 next = 0;
                 if (not datatype) {
-                    cout << "Íå çàäàíû äàííûå!" << endl;
+                    cout << "ÐÐµ Ð·Ð°Ð´Ð°Ð½Ñ‹ Ð´Ð°Ð½Ð½Ñ‹Ðµ!" << endl;
                     break;
                 }
-                cout << "Ââåäèòå â êàêîé òî÷êå íóæíî ñ÷èòàòü ïëîòíîñòü:" << endl;
+                cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð² ÐºÐ°ÐºÐ¾Ð¹ Ñ‚Ð¾Ñ‡ÐºÐµ Ð½ÑƒÐ¶Ð½Ð¾ ÑÑ‡Ð¸Ñ‚Ð°Ñ‚ÑŒ Ð¿Ð»Ð¾Ñ‚Ð½Ð¾ÑÑ‚ÑŒ:" << endl;
                 float x, density;
                 x = input_number(-100000.f, 100000.f);
                 switch (datatype) {
@@ -80,7 +81,7 @@ int main() {
                         density = get_density_by_dataset(x, dataset, dataset + dataset_len);
                         break;
                 }
-                cout << "Ïëîòíîñòü: " << density << endl;
+                cout << "ÐŸÐ»Ð¾Ñ‚Ð½Ð¾ÑÑ‚ÑŒ: " << density << endl;
                 break;
             case 3:
                 datatype = generate_method_menu();
@@ -89,49 +90,59 @@ int main() {
             case 4:
                 next = 0;
                 if (not datatype) {
-                    cout << "Íå çàäàíû äàííûå!" << endl;
+                    cout << "ÐÐµ Ð·Ð°Ð´Ð°Ð½Ñ‹ Ð´Ð°Ð½Ð½Ñ‹Ðµ!" << endl;
                     break;
                 }
-                cout << "Äàííûå âûáîðêè: " << endl;
+                cout << "Ð”Ð°Ð½Ð½Ñ‹Ðµ Ð²Ñ‹Ð±Ð¾Ñ€ÐºÐ¸: " << endl;
                 for (int i = 0; i < dataset_len; i++) {
                     cout << dataset[i] << endl;
                 }
                 break;
             case 5:
+                next = 0;
+                if (not datatype) {
+                    cout << "ÐÐµ Ð·Ð°Ð´Ð°Ð½Ñ‹ Ð´Ð°Ð½Ð½Ñ‹Ðµ!" << endl;
+                    break;
+                }
+                float* new_dataset;
+                new_dataset = modeling_sample_based_on_density(dataset_len,dataset, dataset+dataset_len);
+                dataset = new_dataset;
+                break;
+            case 6:
                 for (int i = 3; i < 7; i++) {
                     coefs[i] = 0;
                 }
-                cout << "Ââåäèòå çíà÷åíèå nu (ïàðàìåòð ðàñïðåäåëåíèÿ)" << endl;
+                cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ nu (Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€ Ñ€Ð°ÑÐ¿Ñ€ÐµÐ´ÐµÐ»ÐµÐ½Ð¸Ñ)" << endl;
                 coefs[0] = input_number(0.f, 100000.f);
-                cout << "Ââåäèòå çíà÷åíèå mu (ñäâèã ïî x)" << endl;
+                cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ mu (ÑÐ´Ð²Ð¸Ð³ Ð¿Ð¾ x)" << endl;
                 coefs[1] = input_number(-100000.f, 100000.f);
-                cout << "Ââåäèòå çíà÷åíèå lambda (ïàðàìåòð ìàøòàáà)" << endl;
+                cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ lambda (Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€ Ð¼Ð°ÑˆÑ‚Ð°Ð±Ð°)" << endl;
                 coefs[2] = input_number(0.f, 100000.f);
-                cout << "Ââåäèòå êîëè÷ñòâî ÷èñåë â âûáîðêå: " << endl;
+                cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ ÐºÐ¾Ð»Ð¸Ñ‡ÑÑ‚Ð²Ð¾ Ñ‡Ð¸ÑÐµÐ» Ð² Ð²Ñ‹Ð±Ð¾Ñ€ÐºÐµ: " << endl;
                 dataset_len = input_number(1, 1000000);
                 dataset = new float[dataset_len];
                 for (int i = 0; i < dataset_len; i++) {
                     dataset[i] = modeling_random_x(coefs[0], coefs[1], coefs[2]);
                 }
-                cout << "Äàííûå óñïåøíî çàäàíû" << endl;
+                cout << "Ð”Ð°Ð½Ð½Ñ‹Ðµ ÑƒÑÐ¿ÐµÑˆÐ½Ð¾ Ð·Ð°Ð´Ð°Ð½Ñ‹" << endl;
                 next = 0;
                 break;
-            case 6:
-                cout << "Ââåäèòå çíà÷åíèå nu_1 (ïàðàìåòð â ðàñïðåäåëåíèè)" << endl;
+            case 7:
+                cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ nu_1 (Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€ Ð² Ñ€Ð°ÑÐ¿Ñ€ÐµÐ´ÐµÐ»ÐµÐ½Ð¸Ð¸)" << endl;
                 coefs[0] = input_number(0.f, 100000.f);
-                cout << "Ââåäèòå çíà÷åíèå mu_1 (ñäâèã ïî x)" << endl;
+                cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ mu_1 (ÑÐ´Ð²Ð¸Ð³ Ð¿Ð¾ x)" << endl;
                 coefs[1] = input_number(-100000.f, 100000.f);
-                cout << "Ââåäèòå çíà÷åíèå lambda_1 (ïàðàìåòð ìàøòàáà)" << endl;
+                cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ lambda_1 (Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€ Ð¼Ð°ÑˆÑ‚Ð°Ð±Ð°)" << endl;
                 coefs[2] = input_number(0.f, 100000.f);
-                cout << "Ââåäèòå çíà÷åíèå nu_2 (ïàðàìåòð â ðàñïðåäåëåíèè)" << endl;
+                cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ nu_2 (Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€ Ð² Ñ€Ð°ÑÐ¿Ñ€ÐµÐ´ÐµÐ»ÐµÐ½Ð¸Ð¸)" << endl;
                 coefs[3] = input_number(0.f, 100000.f);
-                cout << "Ââåäèòå çíà÷åíèå mu_2 (ñäâèã ïî x)" << endl;
+                cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ mu_2 (ÑÐ´Ð²Ð¸Ð³ Ð¿Ð¾ x)" << endl;
                 coefs[4] = input_number(-100000.f, 100000.f);
-                cout << "Ââåäèòå çíà÷åíèå lambda_2 (ïàðìåòð ìàøòàáà)" << endl;
+                cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ lambda_2 (Ð¿Ð°Ñ€Ð¼ÐµÑ‚Ñ€ Ð¼Ð°ÑˆÑ‚Ð°Ð±Ð°)" << endl;
                 coefs[5] = input_number(0.f, 100000.f);
-                cout << "Ââåäèòå çíà÷åíèå p (Âåðîÿòíîñòü)" << endl;
+                cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ p (Ð’ÐµÑ€Ð¾ÑÑ‚Ð½Ð¾ÑÑ‚ÑŒ)" << endl;
                 coefs[6] = input_number(0.f, 1.f);
-                cout << "Ââåäèòå êîëè÷ñòâî ÷èñåë â âûáîðêå: " << endl;
+                cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ ÐºÐ¾Ð»Ð¸Ñ‡ÑÑ‚Ð²Ð¾ Ñ‡Ð¸ÑÐµÐ» Ð² Ð²Ñ‹Ð±Ð¾Ñ€ÐºÐµ: " << endl;
                 dataset_len = input_number(1, 1000000);
                 dataset = new float[dataset_len];
                 for (int i = 0; i < dataset_len; i++) {
@@ -139,21 +150,21 @@ int main() {
                                                        coefs[3], coefs[4], coefs[5],
                                                        coefs[6]);
                 }
-                cout << "Äàííûå óñïåøíî çàäàíû" << endl;
+                cout << "Ð”Ð°Ð½Ð½Ñ‹Ðµ ÑƒÑÐ¿ÐµÑˆÐ½Ð¾ Ð·Ð°Ð´Ð°Ð½Ñ‹" << endl;
                 next = 0;
                 break;
-            case 7:
-                cout << "Ââåäèòå êîëè÷ñòâî ÷èñåë. " << endl;
+            case 8:
+                cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ ÐºÐ¾Ð»Ð¸Ñ‡ÑÑ‚Ð²Ð¾ Ñ‡Ð¸ÑÐµÐ». " << endl;
                 dataset_len = input_number(1, 1000000);
                 dataset = new float[dataset_len];
                 for (int i = 0; i < dataset_len; i++) {
                     dataset[i] = input_number(-100000.f, 100000.f);
                 }
-                cout << "Äàííûå óñïåøíî çàäàíû" << endl;
+                cout << "Ð”Ð°Ð½Ð½Ñ‹Ðµ ÑƒÑÐ¿ÐµÑˆÐ½Ð¾ Ð·Ð°Ð´Ð°Ð½Ñ‹" << endl;
                 next = 0;
                 break;
             default:
-                cout << "Ïðîèçîøëà îøèáêà! Âîçâðàùàåìñÿ â îñíîâíîå ìåíþ" << endl;
+                cout << "ÐŸÑ€Ð¾Ð¸Ð·Ð¾ÑˆÐ»Ð° Ð¾ÑˆÐ¸Ð±ÐºÐ°! Ð’Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°ÐµÐ¼ÑÑ Ð² Ð¾ÑÐ½Ð¾Ð²Ð½Ð¾Ðµ Ð¼ÐµÐ½ÑŽ" << endl;
                 next = 0;
         }
     }

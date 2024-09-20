@@ -12,7 +12,7 @@ float modeling_random_x(float nu_coef, float mu_coef, float lambda_coef);
 float modeling_random_mix_x(float nu_coef_1, float mu_coef_1, float lambda_coef_1, float nu_coef_2,
                             float mu_coef_2, float lambda_coef_2, float p);
 
-int get_density_by_coefs(float x, float nu_coef, float mu_coef, float lambda_coef);
+float get_density_by_coefs(float x, float nu_coef, float mu_coef, float lambda_coef);
 
 float get_mix_density_by_coefs(float x, float nu_coef_1, float mu_coef_1, float lambda_coef_1, float nu_coef_2,
                                float mu_coef_2, float lambda_coef_2, float p);
@@ -48,5 +48,9 @@ float get_density_by_dataset(float x, float *dataset_begin, float *dataset_end);
 float get_asymmetry_by_coefs(float nu_coef, float mu_coef, float lambda_coef);
 
 float get_excess_by_coefs(float nu_coef, float mu_coef, float lambda_coef);
+
+void get_density_massive(float*& ni_begin, float*& ni_end);
+
+float* modeling_sample_based_on_density(int sample_volume, float *dataset_begin, float *dataset_end);
 
 #endif

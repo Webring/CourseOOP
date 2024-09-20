@@ -11,14 +11,14 @@ int input_number(int from, int to) {
         to = numeric_limits<int>::max();
     }
     do {
-        cout << "Значение должно быть целым числом от " << from << " до " << to << ": " << endl;
+        cout << "Р—РЅР°С‡РµРЅРёРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ С†РµР»С‹Рј С‡РёСЃР»РѕРј РѕС‚ " << from << " РґРѕ " << to << ": " << endl;
         cin >> num;
         if (cin.fail()) {
-            cin.clear(); // Сбросить ошибку ввода
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Очистить буфер
-            cout << "Ошибка: это не число. Попробуйте снова." << endl;
+            cin.clear(); // РЎР±СЂРѕСЃРёС‚СЊ РѕС€РёР±РєСѓ РІРІРѕРґР°
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // РћС‡РёСЃС‚РёС‚СЊ Р±СѓС„РµСЂ
+            cout << "РћС€РёР±РєР°: СЌС‚Рѕ РЅРµ С‡РёСЃР»Рѕ. РџРѕРїСЂРѕР±СѓР№С‚Рµ СЃРЅРѕРІР°." << endl;
         } else if (num < from || num > to) {
-            cout << "Ошибка: число вне диапазона. Попробуйте снова." << endl;
+            cout << "РћС€РёР±РєР°: С‡РёСЃР»Рѕ РІРЅРµ РґРёР°РїР°Р·РѕРЅР°. РџРѕРїСЂРѕР±СѓР№С‚Рµ СЃРЅРѕРІР°." << endl;
         }
     } while (num < from || num > to);
     return num;
@@ -30,14 +30,14 @@ float input_number(float from, float to) {
         to = numeric_limits<float>::max();
     }
     do {
-        cout << "Значение должно быть дробным числом от " << from << " до " << to << ": " << endl;
+        cout << "Р—РЅР°С‡РµРЅРёРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РґСЂРѕР±РЅС‹Рј С‡РёСЃР»РѕРј РѕС‚ " << from << " РґРѕ " << to << ": " << endl;
         cin >> num;
         if (cin.fail()) {
-            cin.clear(); // Сбросить ошибку ввода
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Очистить буфер
-            cout << "Ошибка: это не число. Попробуйте снова." << endl;
+            cin.clear(); // РЎР±СЂРѕСЃРёС‚СЊ РѕС€РёР±РєСѓ РІРІРѕРґР°
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // РћС‡РёСЃС‚РёС‚СЊ Р±СѓС„РµСЂ
+            cout << "РћС€РёР±РєР°: СЌС‚Рѕ РЅРµ С‡РёСЃР»Рѕ. РџРѕРїСЂРѕР±СѓР№С‚Рµ СЃРЅРѕРІР°." << endl;
         } else if (num < from || num > to) {
-            cout << "Ошибка: число вне диапазона. Попробуйте снова." << endl;
+            cout << "РћС€РёР±РєР°: С‡РёСЃР»Рѕ РІРЅРµ РґРёР°РїР°Р·РѕРЅР°. РџРѕРїСЂРѕР±СѓР№С‚Рµ СЃРЅРѕРІР°." << endl;
         }
     } while (num < from || num > to);
     return num;
@@ -46,7 +46,7 @@ float input_number(float from, float to) {
 int select_menu_item(int max_items){
     int choice;
     do {
-        cout << "Ваш выбор (номер пункта меню):" << endl;
+        cout << "Р’Р°С€ РІС‹Р±РѕСЂ (РЅРѕРјРµСЂ РїСѓРЅРєС‚Р° РјРµРЅСЋ):" << endl;
         if (cin.fail()) {
             cin.clear();
             cin.ignore(32767, '\n');
@@ -54,33 +54,34 @@ int select_menu_item(int max_items){
         cin >> choice;
 
         if (choice <= 0 or choice > max_items) {
-            cout << "Такого пункта в меню нет! Поэтому измените ";
+            cout << "РўР°РєРѕРіРѕ РїСѓРЅРєС‚Р° РІ РјРµРЅСЋ РЅРµС‚! РџРѕСЌС‚РѕРјСѓ РёР·РјРµРЅРёС‚Рµ ";
         }
     } while (choice <= 0 or choice > max_items);
     return choice;
 }
 
 int main_menu(){
-    cout << "Меню основное:" << endl;
-    cout << "1) найти мат. ожидание, дисперсия, коэфиценты эксцесса и асиметрии" << endl;
-    cout << "2) Найти плотность" << endl;
-    cout << "3) Генерация данных" << endl;
-    cout << "4) Вывести данные" << endl;
+    cout << "РњРµРЅСЋ РѕСЃРЅРѕРІРЅРѕРµ:" << endl;
+    cout << "1) РЅР°Р№С‚Рё РјР°С‚. РѕР¶РёРґР°РЅРёРµ, РґРёСЃРїРµСЂСЃРёСЏ, РєРѕСЌС„РёС†РµРЅС‚С‹ СЌРєСЃС†РµСЃСЃР° Рё Р°СЃРёРјРµС‚СЂРёРё" << endl;
+    cout << "2) РќР°Р№С‚Рё РїР»РѕС‚РЅРѕСЃС‚СЊ" << endl;
+    cout << "3) Р“РµРЅРµСЂР°С†РёСЏ РґР°РЅРЅС‹С…" << endl;
+    cout << "4) Р’С‹РІРµСЃС‚Рё РґР°РЅРЅС‹Рµ" << endl;
+    cout << "5) " << endl;
 
-    return select_menu_item(4);
+    return select_menu_item(5);
 }
 
 void params_show(const float *params_begin, const float *params_end){
-    cout << "Мат. ожидание: " << *params_begin << endl;
-    cout << "Дисперсия " << *(params_begin + 1) << endl;
-    cout << "Коэфицент ассиметрии: " << *(params_begin + 2) << endl;
-    cout << "Коэфицент эксцесса: " << *(params_begin + 3) << endl;
+    cout << "РњР°С‚. РѕР¶РёРґР°РЅРёРµ: " << *params_begin << endl;
+    cout << "Р”РёСЃРїРµСЂСЃРёСЏ " << *(params_begin + 1) << endl;
+    cout << "РљРѕСЌС„РёС†РµРЅС‚ Р°СЃСЃРёРјРµС‚СЂРёРё: " << *(params_begin + 2) << endl;
+    cout << "РљРѕСЌС„РёС†РµРЅС‚ СЌРєСЃС†РµСЃСЃР°: " << *(params_begin + 3) << endl;
 }
 
 int generate_method_menu(){
-    cout << "Меню генерации:" << endl;
-    cout << "1) Генерация по функции" << endl;
-    cout << "2) Смесь" << endl;
-    cout << "3) Ввод с клавиатуры" << endl;
+    cout << "РњРµРЅСЋ РіРµРЅРµСЂР°С†РёРё:" << endl;
+    cout << "1) Р“РµРЅРµСЂР°С†РёСЏ РїРѕ С„СѓРЅРєС†РёРё" << endl;
+    cout << "2) РЎРјРµСЃСЊ" << endl;
+    cout << "3) Р’РІРѕРґ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹" << endl;
     return select_menu_item(3);
 }
