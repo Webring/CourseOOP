@@ -9,6 +9,8 @@ using namespace std;
 float get_random_from_0_to_1();
 
 float modeling_random_x(float nu_coef, float mu_coef, float lambda_coef);
+float modeling_random_mix_x(float nu_coef_1, float mu_coef_1, float lambda_coef_1, float nu_coef_2,
+                            float mu_coef_2, float lambda_coef_2, float p);
 
 int get_density_by_coefs(float x, float nu_coef, float mu_coef, float lambda_coef);
 

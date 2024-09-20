@@ -81,7 +81,7 @@ float get_asymmetry_by_dataset(const float *dataset_begin, const float *dataset_
 }
 
 float get_mix_density_by_coefs(float x, float nu_coef_1, float mu_coef_1, float lambda_coef_1, float nu_coef_2,
-                             float mu_coef_2, float lambda_coef_2, float p) {
+                               float mu_coef_2, float lambda_coef_2, float p) {
     return (1 - p) * get_density_by_coefs(x, nu_coef_1, mu_coef_1, lambda_coef_1) + p * get_density_by_coefs(
                x, nu_coef_2, mu_coef_2, lambda_coef_2);
 }
@@ -145,10 +145,9 @@ float get_mix_asymmetry_by_coefs(float nu_coef_1, float mu_coef_1, float lambda_
 float get_density_by_dataset(float x, float *dataset_begin, float *dataset_end) {
     int len_of_dataset = dataset_end - dataset_begin;
     float k;
-    if(len_of_dataset>=50){
+    if (len_of_dataset >= 50) {
         k = 1 + 3.322 * log10(len_of_dataset);
-    }
-    else{
+    } else {
         k = 8;
     }
     float min = *dataset_begin;
@@ -162,20 +161,29 @@ float get_density_by_dataset(float x, float *dataset_begin, float *dataset_end) 
         if (*temp > max) {
             max = *temp;
         }
-        temp ++;
+        temp++;
     }
     float r = max - min;
-    float h = r/k;
-    float x_first = min - h*0.5;
+    float h = r / k;
+    float x_first = min - h * 0.5;
     float x_left = x_first + floor((x - x_first) / h) * h;
     float x_right = x_left + h;
     float count = 0;
     temp = dataset_begin;
-    for(int i=0; i<len_of_dataset;i++){
-        if(*temp >= x_left and *temp<x_right){
+    for (int i = 0; i < len_of_dataset; i++) {
+        if (*temp >= x_left and *temp < x_right) {
             count++;
         }
         temp++;
     }
-    return count/len_of_dataset;
+    return count / len_of_dataset;
+}
+
+float modeling_random_mix_x(float nu_coef_1, float mu_coef_1, float lambda_coef_1, float nu_coef_2,
+                            float mu_coef_2, float lambda_coef_2, float p) {
+    float r = get_random_from_0_to_1();
+    if (r <= p) {
+        return modeling_random_x(nu_coef_2, mu_coef_2, lambda_coef_2);
+    }
+    return modeling_random_x(nu_coef_1, mu_coef_1, lambda_coef_1);
 }
