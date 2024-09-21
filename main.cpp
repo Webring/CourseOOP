@@ -19,6 +19,7 @@ void write_dataset_to_file(float *dataset, int &dataset_len){
     for (int i = 0; i < dataset_len; i++) {
         file << dataset[i] << endl;
     }
+    file.close();
 }
 
 int main() {
