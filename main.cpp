@@ -1,13 +1,25 @@
 #include "iostream"
 #include "menu.h"
+#include "fstream"
 #include "math.h"
 #include "time.h"
 
-#define GENERATE_PAGE_SHIFT 5
-// #define
+#define GENERATE_PAGE_SHIFT 6
 #define MAIN_MENU_PAGE 0
 
 using namespace std;
+
+void write_dataset_to_file(float *dataset, int &dataset_len){
+    if (dataset == nullptr) {
+        cout << "Не заданы данные!" << endl;
+        return;
+    }
+    cout << "Данные выборки записаны в файл output.data" << endl;
+    ofstream file("output.data");
+    for (int i = 0; i < dataset_len; i++) {
+        file << dataset[i] << endl;
+    }
+}
 
 int main() {
 #if defined(_WIN32) || defined(__CYGWIN__)
@@ -104,6 +116,10 @@ int main() {
                 break;
             case 5:
                 next = MAIN_MENU_PAGE;
+                write_dataset_to_file(dataset, dataset_len);
+                break;
+            case 6:
+                next = MAIN_MENU_PAGE;
                 if (not datatype) {
                     cout << "Не заданы данные!" << endl;
                     break;
@@ -112,7 +128,7 @@ int main() {
                 new_dataset = modeling_sample_based_on_density(dataset_len, dataset, dataset + dataset_len);
                 dataset = new_dataset;
                 break;
-            case 6:
+            case 7:
                 for (int i = 3; i < 7; i++) {
                     coefs[i] = 0;
                 }
@@ -131,7 +147,7 @@ int main() {
                 cout << "Данные успешно заданы" << endl;
                 next = MAIN_MENU_PAGE;
                 break;
-            case 7:
+            case 8:
                 cout << "Введите значение nu_1 (параметр формы)" << endl;
                 coefs[0] = input_number(0.f, 100000.f);
                 cout << "Введите значение mu_1 (сдвиг по x)" << endl;
@@ -157,7 +173,7 @@ int main() {
                 cout << "Данные успешно заданы" << endl;
                 next = MAIN_MENU_PAGE;
                 break;
-            case 8:
+            case 9:
                 cout << "Введите количство чисел. " << endl;
                 dataset_len = input_number(1, 1000000);
                 dataset = new float[dataset_len];
@@ -174,3 +190,4 @@ int main() {
     }
     return 0;
 }
+

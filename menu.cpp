@@ -65,10 +65,11 @@ int main_menu(){
     cout << "1) найти мат. ожидание, дисперсия, коэфиценты эксцесса и асиметрии" << endl;
     cout << "2) Найти плотность" << endl;
     cout << "3) Генерация данных" << endl;
-    cout << "4) Вывести данные" << endl;
-    cout << "5) Получение выборки по функции" << endl;
+    cout << "4) Вывести данные на экран" << endl;
+    cout << "5) Записать данные в файл" << endl;
+    cout << "6) Получение выборки по функции" << endl;
 
-    return select_menu_item(5);
+    return select_menu_item(6);
 }
 
 void params_show(const float *params_begin, const float *params_end){
