@@ -27,9 +27,7 @@ int main() {
     system("chcp 65001");
 #endif
 
-
     srand(time(0));
-
 
     int next = MAIN_MENU_PAGE;
     float coefs[7];
@@ -43,6 +41,9 @@ int main() {
                 next = main_menu();
                 break;
             case 1:
+                if (not datatype){
+                    cout << "Данные на заданы!" << endl;
+                }
                 float values[4];
                 switch (datatype) {
                     case 1:
