@@ -34,8 +34,7 @@ float get_excess_by_coefs(float nu_coef, float mu_coef, float lambda_coef) {
 }
 
 float get_asymmetry_by_coefs(float nu_coef, float mu_coef, float lambda_coef) {
-    return pow(get_dispersion_by_coefs(nu_coef, mu_coef, lambda_coef), -1.5) * (
-               mu_coef - 3 * mu_coef * mu_coef + 2 * mu_coef * mu_coef * mu_coef);
+    return 0;
 }
 
 
@@ -88,7 +87,7 @@ float get_asymmetry_by_dataset(const float *dataset_begin, const float *dataset_
 float get_mix_density_by_coefs(float x, float nu_coef_1, float mu_coef_1, float lambda_coef_1, float nu_coef_2,
                                float mu_coef_2, float lambda_coef_2, float p) {
     return (1 - p) * get_density_by_coefs(x, nu_coef_1, mu_coef_1, lambda_coef_1) + p * get_density_by_coefs(
-               x, nu_coef_2, mu_coef_2, lambda_coef_2);
+            x, nu_coef_2, mu_coef_2, lambda_coef_2);
 }
 
 float get_mix_expectation_by_coefs(float nu_coef_1, float mu_coef_1, float lambda_coef_1, float nu_coef_2,
@@ -102,7 +101,7 @@ float get_mix_dispersion_by_coefs(float nu_coef_1, float mu_coef_1, float lambda
     float dispersion_2 = get_dispersion_by_coefs(nu_coef_2, mu_coef_2, lambda_coef_2);
     float expectation = get_mix_expectation_by_coefs(nu_coef_1, mu_coef_1, lambda_coef_1, nu_coef_2,
                                                      mu_coef_2, lambda_coef_2, p);
-    return p * (pow(mu_coef_1, 2) + dispersion_1) + (1 - p) * (pow(mu_coef_2, 2) + dispersion_2) - pow(expectation, 2);
+    return (1 - p) * (pow(mu_coef_1, 2) + dispersion_1) + p * (pow(mu_coef_2, 2) + dispersion_2) - pow(expectation, 2);
 }
 
 float get_mix_excess_by_coefs(float nu_coef_1, float mu_coef_1, float lambda_coef_1, float nu_coef_2,
@@ -119,14 +118,13 @@ float get_mix_excess_by_coefs(float nu_coef_1, float mu_coef_1, float lambda_coe
     float excess_1 = get_excess_by_coefs(nu_coef_1, mu_coef_1, lambda_coef_1);
     float excess_2 = get_excess_by_coefs(nu_coef_2, mu_coef_2, lambda_coef_2);
 
+    float element_1 = (1 - p) * (pow(mu_coef_1 - expectation, 4) + 6 * pow(mu_coef_1 - expectation, 2) * dispersion_1 + 4 * (
+                    mu_coef_1 - expectation) * pow(dispersion_1, 1.5) * asymmetry_1 + pow(dispersion_1, 2) * (excess_1 + 3));
+    float element_2 = p * (pow(mu_coef_2 - expectation, 4) + 6 * pow(mu_coef_2 - expectation, 2) * dispersion_2 + 4 * (
+            mu_coef_2 - expectation) * pow(dispersion_2, 1.5) * asymmetry_2 + pow(dispersion_2, 2) * (excess_2 + 3));
 
-    return (((p * (pow(mu_coef_1 - expectation, 4) + 6 * pow(mu_coef_1 - expectation, 2) * dispersion_1 + 4 * (
-                       mu_coef_1 - expectation) * pow(dispersion_1, 1.5) * asymmetry_1 + pow(dispersion_1, 2) * (
-                       excess_1 + 3))) + ((1 - p) * (pow(mu_coef_2 - expectation, 4) + 6 * pow(
-                                                         mu_coef_2 - expectation, 2) * dispersion_2 + 4 * (
-                                                         mu_coef_2 - expectation) * pow(dispersion_2, 1.5) * asymmetry_2
-                                                     + pow(dispersion_2, 2) * (
-                                                         excess_2 + 3)))) / pow(dispersion, 2)) - 3;
+
+    return ((element_1 + element_2) / pow(dispersion, 2)) - 3;
 }
 
 float get_mix_asymmetry_by_coefs(float nu_coef_1, float mu_coef_1, float lambda_coef_1, float nu_coef_2,
@@ -138,10 +136,10 @@ float get_mix_asymmetry_by_coefs(float nu_coef_1, float mu_coef_1, float lambda_
     float dispersion_1 = get_dispersion_by_coefs(nu_coef_1, mu_coef_1, lambda_coef_1);
     float dispersion_2 = get_dispersion_by_coefs(nu_coef_2, mu_coef_2, lambda_coef_2);
 
-    float sum = p * (pow(mu_coef_1 - expectation, 3) + 3 * (mu_coef_1 - expectation) * dispersion_1 + pow(
-                         dispersion_1, 1.5) + get_asymmetry_by_coefs(nu_coef_1, mu_coef_1, lambda_coef_1));
-    sum += (1 - p) * (pow(mu_coef_2 - expectation, 3) + 3 * (mu_coef_2 - expectation) * dispersion_2 + pow(
-                          dispersion_2, 1.5) + get_asymmetry_by_coefs(nu_coef_2, mu_coef_2, lambda_coef_2));
+    float sum = (1 - p) * (pow(mu_coef_1 - expectation, 3) + 3 * (mu_coef_1 - expectation) * dispersion_1 + pow(
+            dispersion_1, 1.5) * get_asymmetry_by_coefs(nu_coef_1, mu_coef_1, lambda_coef_1));
+    sum += p * (pow(mu_coef_2 - expectation, 3) + 3 * (mu_coef_2 - expectation) * dispersion_2 + pow(
+            dispersion_2, 1.5) * get_asymmetry_by_coefs(nu_coef_2, mu_coef_2, lambda_coef_2));
 
     return pow(dispersion, -1.5) * sum;
 }
@@ -184,7 +182,7 @@ float get_density_by_dataset(float x, float *dataset_begin, float *dataset_end) 
     return count / len_of_dataset;
 }
 
-int get_density_massive(float *dataset_begin, float *dataset_end, float*& ni_begin, float*& ni_end){
+int get_density_massive(float *dataset_begin, float *dataset_end, float *&ni_begin, float *&ni_end) {
     int len_of_dataset = dataset_end - dataset_begin;
     int k;
     if (len_of_dataset >= 50) {
@@ -211,59 +209,57 @@ int get_density_massive(float *dataset_begin, float *dataset_end, float*& ni_beg
     ni_begin = new float[k + 2];
     float x_left = x_first;
     float x_right;
-    for(int j=0;j<k;j++){
+    for (int j = 0; j < k; j++) {
         ni_begin[j] = 0;
-        x_right = x_first + h*(j+1);
+        x_right = x_first + h * (j + 1);
         temp = dataset_begin;
-        for(int i=0;i<len_of_dataset;i++){
-            if(*temp<x_right and *temp>=x_left){
-                ni_begin[j] ++;
+        for (int i = 0; i < len_of_dataset; i++) {
+            if (*temp < x_right and *temp >= x_left) {
+                ni_begin[j]++;
             }
             temp++;
         }
         x_left = x_right;
     }
     ni_begin[k] = float(x_first);
-    ni_begin[k+1] = float(h);
+    ni_begin[k + 1] = float(h);
 //    ni_begin = new float(ni_begin[0]);
-    ni_end = new float(ni_begin[k+1]);
+    ni_end = new float(ni_begin[k + 1]);
     return k;
 }
 
-float* modeling_sample_based_on_density(int sample_volume, float *dataset_begin, float *dataset_end){
+float *modeling_sample_based_on_sample(int sample_volume, float *dataset_begin, float *dataset_end) {
 
 
-    float* ni_begin;
-    float* ni_end;
+    float *ni_begin;
+    float *ni_end;
 
-    int k = get_density_massive(dataset_begin,dataset_end, ni_begin, ni_end);
-    ni_end  = ni_begin + k+1 ;
+    int k = get_density_massive(dataset_begin, dataset_end, ni_begin, ni_end);
+    ni_end = ni_begin + k + 1;
     float h = *ni_end;
-    float x_first = *(ni_end-1);
-    float* new_end = ni_end-2;
-    int ni_volume = k;
+    float x_first = *(ni_end - 1);
 
-    float* new_samples = new float[sample_volume];
-    int index = 0;
+    float *new_samples = new float[sample_volume];
 
-    for (int i = 0; i < ni_volume; i++) {
-        int count_in_interval = static_cast<int>(ni_begin[i]);
-
-        float interval_start = x_first + i * h;
-
-        for (int j = 0; j < count_in_interval && index < sample_volume; j++) {
-            float random_value = interval_start + (float) rand() / RAND_MAX * h;
-            new_samples[index++] = random_value;
+    float r = 0;
+    float increment = 0;
+    float x = 0;
+    float* temp = ni_begin;
+    for(int i=0;i<sample_volume;i++){
+        r = get_random_from_0_to_1();
+        increment = 0;
+        for(int j=0;j<k;k++){
+            increment = (*temp*1.0) / sample_volume;
+            if(r<increment){
+                x = (h*r) + (j*h+x_first);
+            }
+            temp ++;
         }
+        new_samples[i] = x;
     }
-
-    while (index < sample_volume) {
-        float random_value = x_first + static_cast<float>(rand()) / RAND_MAX * (ni_volume * h);
-        new_samples[index++] = random_value;
-    }
-
     return new_samples;
 }
+
 
 float modeling_random_mix_x(float nu_coef_1, float mu_coef_1, float lambda_coef_1, float nu_coef_2,
                             float mu_coef_2, float lambda_coef_2, float p) {

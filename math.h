@@ -51,6 +51,6 @@ float get_excess_by_coefs(float nu_coef, float mu_coef, float lambda_coef);
 
 int get_density_massive(float*& ni_begin, float*& ni_end);
 
-float* modeling_sample_based_on_density(int sample_volume, float *dataset_begin, float *dataset_end);
+float* modeling_sample_based_on_sample(int sample_volume, float *dataset_begin, float *dataset_end);
 
 #endif
