@@ -248,7 +248,8 @@ float *modeling_sample_based_on_sample(int sample_volume, float *dataset_begin, 
     for(int i=0;i<sample_volume;i++){
         r = get_random_from_0_to_1();
         increment = 0;
-        for(int j=0;j<k;k++){
+        temp = ni_begin;
+        for(int j=0;j<k;j++){
             increment = (*temp*1.0) / sample_volume;
             if(r<increment){
                 x = (h*r) + (j*h+x_first);
