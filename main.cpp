@@ -26,16 +26,18 @@
 
 using namespace std;
 
-void write_dataset_to_file(float *dataset, int &dataset_len) {
+void write_dataset_to_file(float *dataset, int &dataset_len, int &file_index) {
     if (dataset == nullptr) {
         cout << "Не заданы данные!" << endl;
         return;
     }
-    cout << "Данные выборки записаны в файл output.data" << endl;
-    ofstream file("output.data");
+
+    const string file_name = "distribution_" + to_string(file_index) + ".data";
+    ofstream file(file_name);
     for (int i = 0; i < dataset_len; i++) {
         file << dataset[i] << endl;
     }
+    cout << "Данные выборки записаны в файл " << file_name << endl;
     file.close();
 }
 
@@ -131,6 +133,7 @@ int main() {
     int dataset_len = 0;
     int datatype = 0;
     float stats[4];
+    int output_file_index = 0;
     float x, density;
     /*
      * datatype
@@ -211,7 +214,8 @@ int main() {
                 next = SELECT_OPERATION_FOR_DISTIBUTION_BY_DATASET_PAGE;
                 break;
             case DATASET_TO_FILE_PAGE:
-                write_dataset_to_file(dataset, dataset_len);
+                write_dataset_to_file(dataset, dataset_len, output_file_index);
+                output_file_index ++;
                 next = SELECT_OPERATION_FOR_DISTIBUTION_BY_DATASET_PAGE;
                 break;
             case GENERATE_DATASET_BY_DENSITY_PAGE:
