@@ -239,10 +239,10 @@ float *modeling_sample_based_on_sample(int sample_volume, float *dataset_begin, 
 
     float *sample_based_on_sample = new float[sample_volume];
 
-    float realisation_of_value = 0;
-    float cumulative_probability = 0;
+    float realisation_of_value;
+    float cumulative_probability;
     float x = 0;
-    float* array_iterator = number_of_occurrences_array_begin;
+    float* array_iterator = NULL;
     for(int i=0;i<sample_volume;i++){
         realisation_of_value = get_random_from_0_to_1();
         cumulative_probability = 0;
@@ -251,6 +251,7 @@ float *modeling_sample_based_on_sample(int sample_volume, float *dataset_begin, 
             cumulative_probability += (*array_iterator*1.0) / sample_volume;
             if(realisation_of_value < cumulative_probability){
                 x = (interval_width * realisation_of_value) + (j*interval_width + first_value);
+                break;
             }
             array_iterator ++;
         }
