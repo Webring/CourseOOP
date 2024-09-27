@@ -149,7 +149,7 @@ int main_menu(){
 
 int coefs_operations_menu(){
     cout << "Меню для работы с теоритической частью:" << endl;
-    cout << "1) найти мат. ожидание, дисперсия, коэфиценты эксцесса и асимметрии" << endl;
+    cout << "1) Найти мат. ожидание, дисперсия, коэфиценты эксцесса и асимметрии" << endl;
     cout << "2) Найти плотность" << endl;
     cout << "3) Сгенерировать данные" << endl;
     cout << "0) Назад" << endl;
@@ -188,7 +188,7 @@ void input_4_coefs(float *coefs) {
     cout << "Введите значение mu (сдвиг по x)" << endl;
     coefs[1] = input_number(-100000.f, 100000.f);
     cout << "Введите значение lambda (параметр маштаба)" << endl;
-    coefs[2] = input_number(0.f, 100000.f);
+    coefs[2] = input_number(0.0000001f, 100000.f);
 }
 void input_7_coefs(float *coefs) {
     cout << "Введите значение nu_1 (параметр формы)" << endl;
@@ -196,13 +196,13 @@ void input_7_coefs(float *coefs) {
     cout << "Введите значение mu_1 (сдвиг по x)" << endl;
     coefs[1] = input_number(-100000.f, 100000.f);
     cout << "Введите значение lambda_1 (параметр маштаба)" << endl;
-    coefs[2] = input_number(0.f, 100000.f);
+    coefs[2] = input_number(0.0000001f, 100000.f);
     cout << "Введите значение nu_2 (параметр формы)" << endl;
     coefs[3] = input_number(0.f, 100000.f);
     cout << "Введите значение mu_2 (сдвиг по x)" << endl;
     coefs[4] = input_number(-100000.f, 100000.f);
     cout << "Введите значение lambda_2 (парметр маштаба)" << endl;
-    coefs[5] = input_number(0.f, 100000.f);
+    coefs[5] = input_number(0.0000001f, 100000.f);
     cout << "Введите значение p (Вероятность)" << endl;
     coefs[6] = input_number(0.f, 1.f);
 }

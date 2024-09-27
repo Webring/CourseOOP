@@ -19,7 +19,7 @@ void write_density_array_to_file(float *dataset, int &dataset_len, int &file_ind
     const string file_name = "density_by_intervals_" + to_string(intervals) + "_" + to_string(file_index) + ".data";
 
     ofstream file(file_name);
-    for (auto i = 0; i < intervals; i++) {
+    for (auto i = 0; i < intervals + 2; i++) {
         file << *(density_array_begin + i) << endl;
     }
     cout << "Данные выборки записаны в файл " << file_name << endl;
@@ -202,6 +202,7 @@ int main() {
                 density = calc_density(x, EMPIRICAL_DATATYPE, coefs, dataset, dataset_len);
                 cout << "Плотность: " << density << endl;
                 write_density_array_to_file(dataset, dataset_len, output_file_index);
+                output_file_index++;
                 next = SELECT_OPERATION_FOR_DISTIBUTION_BY_DATASET_PAGE;
                 break;
             case SHOW_DATASET_PAGE:
