@@ -37,7 +37,6 @@ float get_asymmetry_by_coefs(float nu_coef, float mu_coef, float lambda_coef) {
     return 0;
 }
 
-
 float get_expectation_by_dataset(const float *dataset_begin, const float *dataset_end) {
     float sum = 0;
     int counter = 0;
@@ -144,7 +143,6 @@ float get_mix_asymmetry_by_coefs(float nu_coef_1, float mu_coef_1, float lambda_
     return pow(dispersion, -1.5) * sum;
 }
 
-
 float get_density_by_dataset(float x, float *dataset_begin, float *dataset_end) {
     int len_of_dataset = dataset_end - dataset_begin;
     float number_of_intervals;
@@ -250,7 +248,7 @@ float *modeling_sample_based_on_sample(int sample_volume, float *dataset_begin, 
         cumulative_probability = 0;
         array_iterator = number_of_occurrences_array_begin;
         for(int j=0;j<number_of_intervals;j++){
-            cumulative_probability = (*array_iterator*1.0) / sample_volume;
+            cumulative_probability += (*array_iterator*1.0) / sample_volume;
             if(realisation_of_value < cumulative_probability){
                 x = (interval_width * realisation_of_value) + (j*interval_width + first_value);
             }
@@ -258,9 +256,9 @@ float *modeling_sample_based_on_sample(int sample_volume, float *dataset_begin, 
         }
         sample_based_on_sample[i] = x;
     }
+
     return sample_based_on_sample;
 }
-
 
 float modeling_random_mix_x(float nu_coef_1, float mu_coef_1, float lambda_coef_1, float nu_coef_2,
                             float mu_coef_2, float lambda_coef_2, float p) {
