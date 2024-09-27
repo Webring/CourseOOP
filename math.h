@@ -47,8 +47,6 @@ float get_density_by_dataset(float x, float *dataset_begin, float *dataset_end);
 
 float get_asymmetry_by_coefs(float nu_coef, float mu_coef, float lambda_coef);
 
-float get_excess_by_coefs(float nu_coef, float mu_coef, float lambda_coef);
-
 int get_density_array(float *dataset_begin, float *dataset_end, float *&number_of_occurrences_array_begin, float *&number_of_occurrences_array_end);
 
 float* modeling_sample_based_on_sample(int sample_volume, float *dataset_begin, float *dataset_end);
