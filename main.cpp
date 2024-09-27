@@ -4,9 +4,27 @@
 #include "math.h"
 #include "consts.h"
 
-
-
 using namespace std;
+
+void write_density_array_to_file(float *dataset, int &dataset_len, int &file_index) {
+    if (dataset == nullptr) {
+        cout << "Не заданы данные!" << endl;
+        return;
+    }
+
+    float *density_array_begin, *density_array_end;
+
+    int intervals = get_density_array(dataset, dataset + dataset_len, density_array_begin, density_array_end);
+
+    const string file_name = "density_by_intervals_" + to_string(intervals) + "_" + to_string(file_index) + ".data";
+
+    ofstream file(file_name);
+    for (auto i = 0; i < intervals; i++) {
+        file << *(density_array_begin + i) << endl;
+    }
+    cout << "Данные выборки записаны в файл " << file_name << endl;
+    file.close();
+}
 
 void write_dataset_to_file(float *dataset, int &dataset_len, int &file_index) {
     if (dataset == nullptr) {
@@ -183,6 +201,7 @@ int main() {
                 x = input_number(-100000.f, 100000.f);
                 density = calc_density(x, EMPIRICAL_DATATYPE, coefs, dataset, dataset_len);
                 cout << "Плотность: " << density << endl;
+                write_density_array_to_file(dataset, dataset_len, output_file_index);
                 next = SELECT_OPERATION_FOR_DISTIBUTION_BY_DATASET_PAGE;
                 break;
             case SHOW_DATASET_PAGE:
@@ -191,7 +210,7 @@ int main() {
                 break;
             case DATASET_TO_FILE_PAGE:
                 write_dataset_to_file(dataset, dataset_len, output_file_index);
-                output_file_index ++;
+                output_file_index++;
                 next = SELECT_OPERATION_FOR_DISTIBUTION_BY_DATASET_PAGE;
                 break;
             case GENERATE_DATASET_BY_DENSITY_PAGE:
