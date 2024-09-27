@@ -6,15 +6,15 @@ double beta(double x, double y) {
 }
 
 float modeling_random_x(float nu_coef, float mu_coef, float lambda_coef) {
-    float r1 = get_random_from_0_to_1();
-    float r2 = get_random_from_0_to_1();
-    return lambda_coef * sqrt(1 - pow(r1, 1 / (nu_coef + 0.5))) * cos(2 * M_PI * r2) + mu_coef;
+    float realisation_of_value_1 = get_random_from_0_to_1();
+    float realisation_of_value_2 = get_random_from_0_to_1();
+    return lambda_coef * sqrt(1 - pow(realisation_of_value_1, 1 / (nu_coef + 0.5))) * cos(2 * M_PI * realisation_of_value_2) + mu_coef;
 }
 
 float get_random_from_0_to_1() {
-    float r;
-    do r = (float) rand() / RAND_MAX; while (r == 0. || r == 1.);
-    return r;
+    float realisation_of_value;
+    do realisation_of_value = (float) rand() / RAND_MAX; while (realisation_of_value == 0. || realisation_of_value == 1.);
+    return realisation_of_value;
 }
 
 float get_density_by_coefs(float x, float nu_coef, float mu_coef, float lambda_coef) {
@@ -147,125 +147,125 @@ float get_mix_asymmetry_by_coefs(float nu_coef_1, float mu_coef_1, float lambda_
 
 float get_density_by_dataset(float x, float *dataset_begin, float *dataset_end) {
     int len_of_dataset = dataset_end - dataset_begin;
-    float k;
+    float number_of_intervals;
     if (len_of_dataset >= 50) {
-        k = 1 + 3.322 * log10(len_of_dataset);
+        number_of_intervals = int(log2(len_of_dataset)) + 1;
     } else {
-        k = 8;
+        number_of_intervals = 8;
     }
-    float min = *dataset_begin;
-    float max = *dataset_begin;
-    float *temp = dataset_begin;
+    float minimum_number = *dataset_begin;
+    float maximum_number = *dataset_begin;
+    float *dataset_iterator = dataset_begin;
 
-    while (temp < dataset_end) {
-        if (*temp < min) {
-            min = *temp;
+    while (dataset_iterator < dataset_end) {
+        if (*dataset_iterator < minimum_number) {
+            minimum_number = *dataset_iterator;
         }
-        if (*temp > max) {
-            max = *temp;
+        if (*dataset_iterator > maximum_number) {
+            maximum_number = *dataset_iterator;
         }
-        temp++;
+        dataset_iterator++;
     }
-    float r = max - min;
-    float h = r / k;
-    float x_first = min - h * 0.5;
-    float x_left = x_first + floor((x - x_first) / h) * h;
-    float x_right = x_left + h;
-    float count = 0;
-    temp = dataset_begin;
+    float range = maximum_number - minimum_number;
+    float interval_width = range / number_of_intervals;
+    float first_value = minimum_number - interval_width * 0.5;
+    float left_border_value = first_value + floor((x - first_value) / interval_width) * interval_width;
+    float right_border_value = left_border_value + interval_width;
+    float number_of_occurrences = 0;
+    dataset_iterator = dataset_begin;
     for (int i = 0; i < len_of_dataset; i++) {
-        if (*temp >= x_left and *temp < x_right) {
-            count++;
+        if (*dataset_iterator >= left_border_value and *dataset_iterator < right_border_value) {
+            number_of_occurrences++;
         }
-        temp++;
+        dataset_iterator++;
     }
-    return count / len_of_dataset;
+    return number_of_occurrences / len_of_dataset;
 }
 
-int get_density_massive(float *dataset_begin, float *dataset_end, float *&ni_begin, float *&ni_end) {
+int get_density_array(float *dataset_begin, float *dataset_end, float *&number_of_occurrences_array_begin, float *&number_of_occurrences_array_end) {
     int len_of_dataset = dataset_end - dataset_begin;
-    int k;
+    int number_of_intervals;
     if (len_of_dataset >= 50) {
-        k = log2(len_of_dataset) + 1;
+        number_of_intervals = int(log2(len_of_dataset)) + 1;
     } else {
-        k = 8;
+        number_of_intervals = 8;
     }
-    float min = *dataset_begin;
-    float max = *dataset_begin;
-    float *temp = dataset_begin;
+    float minimum_number = *dataset_begin;
+    float maximum_number = *dataset_begin;
+    float *dataset_iterator = dataset_begin;
 
-    while (temp < dataset_end) {
-        if (*temp < min) {
-            min = *temp;
+    while (dataset_iterator < dataset_end) {
+        if (*dataset_iterator < minimum_number) {
+            minimum_number = *dataset_iterator;
         }
-        if (*temp > max) {
-            max = *temp;
+        if (*dataset_iterator > maximum_number) {
+            maximum_number = *dataset_iterator;
         }
-        temp++;
+        dataset_iterator++;
     }
-    float r = max - min;
-    float h = r / k;
-    float x_first = min - h * 0.5;
-    ni_begin = new float[k + 2];
-    float x_left = x_first;
-    float x_right;
-    for (int j = 0; j < k; j++) {
-        ni_begin[j] = 0;
-        x_right = x_first + h * (j + 1);
-        temp = dataset_begin;
+    float range = maximum_number - minimum_number;
+    float interval_width = range / number_of_intervals;
+    float first_value = minimum_number - interval_width * 0.5;
+    number_of_occurrences_array_begin = new float[number_of_intervals + 2];
+    float left_border_value = first_value;
+    float right_border_value;
+    for (int j = 0; j < number_of_intervals; j++) {
+        number_of_occurrences_array_begin[j] = 0;
+        right_border_value = first_value + interval_width * (j + 1);
+        dataset_iterator = dataset_begin;
         for (int i = 0; i < len_of_dataset; i++) {
-            if (*temp < x_right and *temp >= x_left) {
-                ni_begin[j]++;
+            if (*dataset_iterator < right_border_value and *dataset_iterator >= left_border_value) {
+                number_of_occurrences_array_begin[j]++;
             }
-            temp++;
+            dataset_iterator++;
         }
-        x_left = x_right;
+        left_border_value = right_border_value;
     }
-    ni_begin[k] = float(x_first);
-    ni_begin[k + 1] = float(h);
+    number_of_occurrences_array_begin[number_of_intervals] = float(first_value);
+    number_of_occurrences_array_begin[number_of_intervals + 1] = float(interval_width);
 //    ni_begin = new float(ni_begin[0]);
-    ni_end = new float(ni_begin[k + 1]);
-    return k;
+    number_of_occurrences_array_end = new float(number_of_occurrences_array_begin[number_of_intervals + 1]);
+    return number_of_intervals;
 }
 
 float *modeling_sample_based_on_sample(int sample_volume, float *dataset_begin, float *dataset_end) {
 
 
-    float *ni_begin;
-    float *ni_end;
+    float *number_of_occurrences_array_begin;
+    float *number_of_occurrences_array_end;
 
-    int k = get_density_massive(dataset_begin, dataset_end, ni_begin, ni_end);
-    ni_end = ni_begin + k + 1;
-    float h = *ni_end;
-    float x_first = *(ni_end - 1);
+    int number_of_intervals = get_density_array(dataset_begin, dataset_end, number_of_occurrences_array_begin, number_of_occurrences_array_end);
+    number_of_occurrences_array_end = number_of_occurrences_array_begin + number_of_intervals + 1;
+    float interval_width = *number_of_occurrences_array_end;
+    float first_value = *(number_of_occurrences_array_end - 1);
 
-    float *new_samples = new float[sample_volume];
+    float *sample_based_on_sample = new float[sample_volume];
 
-    float r = 0;
-    float increment = 0;
+    float realisation_of_value = 0;
+    float cumulative_probability = 0;
     float x = 0;
-    float* temp = ni_begin;
+    float* array_iterator = number_of_occurrences_array_begin;
     for(int i=0;i<sample_volume;i++){
-        r = get_random_from_0_to_1();
-        increment = 0;
-        temp = ni_begin;
-        for(int j=0;j<k;j++){
-            increment = (*temp*1.0) / sample_volume;
-            if(r<increment){
-                x = (h*r) + (j*h+x_first);
+        realisation_of_value = get_random_from_0_to_1();
+        cumulative_probability = 0;
+        array_iterator = number_of_occurrences_array_begin;
+        for(int j=0;j<number_of_intervals;j++){
+            cumulative_probability = (*array_iterator*1.0) / sample_volume;
+            if(realisation_of_value < cumulative_probability){
+                x = (interval_width * realisation_of_value) + (j*interval_width + first_value);
             }
-            temp ++;
+            array_iterator ++;
         }
-        new_samples[i] = x;
+        sample_based_on_sample[i] = x;
     }
-    return new_samples;
+    return sample_based_on_sample;
 }
 
 
 float modeling_random_mix_x(float nu_coef_1, float mu_coef_1, float lambda_coef_1, float nu_coef_2,
                             float mu_coef_2, float lambda_coef_2, float p) {
-    float r = get_random_from_0_to_1();
-    if (r <= p) {
+    float realisation_of_value = get_random_from_0_to_1();
+    if (realisation_of_value <= p) {
         return modeling_random_x(nu_coef_2, mu_coef_2, lambda_coef_2);
     }
     return modeling_random_x(nu_coef_1, mu_coef_1, lambda_coef_1);
