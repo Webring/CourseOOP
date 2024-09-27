@@ -2,26 +2,8 @@
 #include "menu.h"
 #include "fstream"
 #include "math.h"
-#include "time.h"
+#include "consts.h"
 
-#define GENERATE_PAGE_SHIFT 6
-
-#define LAYER_2_PAGE_SHIFT 3
-#define LAYER_3_PAGE_SHIFT 7
-
-#define MAIN_MENU_PAGE 0
-#define BASIC_DISTRIBUTION_INPUT_PAGE 1
-#define MIX_DISTRIBUTION_INPUT_PAGE 2
-#define SELECT_OPERATION_FOR_DISTIBUTION_BY_COEFS_PAGE 3
-#define STATS_BY_COEFS_PAGE 4
-#define DENSITY_BY_COEFS_PAGE 5
-#define GENERATE_DATASET_PAGE 6
-#define SELECT_OPERATION_FOR_DISTIBUTION_BY_DATASET_PAGE 7
-#define STATS_BY_DATASET_PAGE 8
-#define DENSITY_BY_DATASET_PAGE 9
-#define SHOW_DATASET_PAGE 10
-#define DATASET_TO_FILE_PAGE 11
-#define GENERATE_DATASET_BY_DENSITY_PAGE 12
 
 
 using namespace std;
@@ -54,13 +36,13 @@ void show_dataset(float *dataset, int &dataset_len) {
 
 void calc_stats(int datatype, float *coefs, float *dataset, int &dataset_len, float *stats) {
     switch (datatype) {
-        case 1:
+        case GENERAL_DISTRIBUTION_DATATYPE:
             stats[0] = get_expectation_by_coefs(coefs[0], coefs[1], coefs[2]);
             stats[1] = get_dispersion_by_coefs(coefs[0], coefs[1], coefs[2]);
             stats[2] = get_asymmetry_by_coefs(coefs[0], coefs[1], coefs[2]);
             stats[3] = get_excess_by_coefs(coefs[0], coefs[1], coefs[2]);
             break;
-        case 2:
+        case MIX_DISTRIBUTION_DATATYPE:
             stats[0] = get_mix_expectation_by_coefs(coefs[0], coefs[1], coefs[2],
                                                     coefs[3], coefs[4], coefs[5],
                                                     coefs[6]);
@@ -75,7 +57,7 @@ void calc_stats(int datatype, float *coefs, float *dataset, int &dataset_len, fl
                                                coefs[3], coefs[4], coefs[5],
                                                coefs[6]);
             break;
-        case 3:
+        case EMPIRICAL_DATATYPE:
             stats[0] = get_expectation_by_dataset(dataset, dataset + dataset_len);
             stats[1] = get_dispersion_by_dataset(dataset, dataset + dataset_len);
             stats[2] = get_asymmetry_by_dataset(dataset, dataset + dataset_len);
@@ -87,15 +69,15 @@ void calc_stats(int datatype, float *coefs, float *dataset, int &dataset_len, fl
 float calc_density(float x, int datatype, float *coefs, float *dataset, int &dataset_len) {
     float density;
     switch (datatype) {
-        case 1:
+        case GENERAL_DISTRIBUTION_DATATYPE:
             density = get_density_by_coefs(x, coefs[0], coefs[1], coefs[2]);
             break;
-        case 2:
+        case MIX_DISTRIBUTION_DATATYPE:
             density = get_mix_density_by_coefs(x, coefs[0], coefs[1], coefs[2],
                                                coefs[3], coefs[4], coefs[5],
                                                coefs[6]);
             break;
-        case 3:
+        case EMPIRICAL_DATATYPE:
             density = get_density_by_dataset(x, dataset, dataset + dataset_len);
             break;
     }
@@ -105,12 +87,12 @@ float calc_density(float x, int datatype, float *coefs, float *dataset, int &dat
 void generate_dataset(int &datatype, float *&dataset, int &dataset_len, float *coefs) {
     dataset = new float[dataset_len];
     switch (datatype) {
-        case 1:
+        case GENERAL_DISTRIBUTION_DATATYPE:
             for (int i = 0; i < dataset_len; i++) {
                 dataset[i] = modeling_random_x(coefs[0], coefs[1], coefs[2]);
             }
             break;
-        case 2:
+        case MIX_DISTRIBUTION_DATATYPE:
             for (int i = 0; i < dataset_len; i++) {
                 dataset[i] = modeling_random_mix_x(coefs[0], coefs[1], coefs[2],
                                                    coefs[3], coefs[4], coefs[5],
@@ -120,10 +102,14 @@ void generate_dataset(int &datatype, float *&dataset, int &dataset_len, float *c
     }
 }
 
+
 int main() {
 #if defined(_WIN32) || defined(__CYGWIN__)
     system("chcp 65001");
+    system("cls");
 #endif
+
+
 
     srand(time(0));
 
@@ -135,13 +121,6 @@ int main() {
     float stats[4];
     int output_file_index = 0;
     float x, density;
-    /*
-     * datatype
-     * 0 - Данные не заданы
-     * 1 - Основная выборка
-     * 2 - Смесь
-     * 3 - По датасету
-     */
 
     while (next >= 0) {
         switch (next) {
@@ -170,7 +149,6 @@ int main() {
                 }
                 break;
             case STATS_BY_COEFS_PAGE:
-
                 calc_stats(datatype, coefs, dataset, dataset_len, stats);
                 show_stats(stats);
                 next = SELECT_OPERATION_FOR_DISTIBUTION_BY_COEFS_PAGE;
@@ -198,14 +176,14 @@ int main() {
                 }
                 break;
             case STATS_BY_DATASET_PAGE:
-                calc_stats(3, coefs, dataset, dataset_len, stats);
+                calc_stats(EMPIRICAL_DATATYPE, coefs, dataset, dataset_len, stats);
                 show_stats(stats);
                 next = SELECT_OPERATION_FOR_DISTIBUTION_BY_DATASET_PAGE;
                 break;
             case DENSITY_BY_DATASET_PAGE:
                 cout << "Введите в какой точке нужно считать плотность:" << endl;
                 x = input_number(-100000.f, 100000.f);
-                density = calc_density(x, 3, coefs, dataset, dataset_len);
+                density = calc_density(x, EMPIRICAL_DATATYPE, coefs, dataset, dataset_len);
                 cout << "Плотность: " << density << endl;
                 next = SELECT_OPERATION_FOR_DISTIBUTION_BY_DATASET_PAGE;
                 break;

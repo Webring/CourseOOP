@@ -10,4 +10,5 @@ add_executable(oop
         menu.h
         math.cpp
         math.h
+        consts.h
 )
