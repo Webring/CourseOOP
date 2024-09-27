@@ -109,8 +109,6 @@ int main() {
     system("cls");
 #endif
 
-
-
     srand(time(0));
 
     int next = MAIN_MENU_PAGE;

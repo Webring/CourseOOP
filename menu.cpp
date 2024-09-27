@@ -5,59 +5,134 @@
 
 using namespace std;
 
+bool is_int_number(const string& str) {
+    // Проверяем, что строка не пуста и все символы в строке - цифры (или знак)
+    if (str.empty()) {
+        return false;
+    }
+
+    size_t i = 0;
+
+    // Проверяем первый символ, если это знак числа
+    if (str[0] == '-' || str[0] == '+') {
+        if (str.length() == 1) {
+            return false; // строка не может состоять только из знака
+        }
+        i = 1; // Начинаем проверять цифры со второго символа
+    }
+
+    // Проверяем, что оставшиеся символы - цифры
+    for (; i < str.length(); ++i) {
+        if (!isdigit(str[i])) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool is_float_number(const string& str) {
+    if (str.empty()) {
+        return false;
+    }
+
+    bool decimal_point_found = false;
+    size_t i = 0;
+
+    // Проверяем первый символ, если это знак числа
+    if (str[0] == '-' || str[0] == '+') {
+        if (str.length() == 1) {
+            return false; // строка не может состоять только из знака
+        }
+        i = 1; // Начинаем проверять цифры и точку со второго символа
+    }
+
+    // Проходим по остальным символам строки
+    for (; i < str.length(); ++i) {
+        if (str[i] == '.') {
+            // Если точка уже встречалась, возвращаем false
+            if (decimal_point_found) {
+                return false;
+            }
+            decimal_point_found = true;
+        } else if (!isdigit(str[i])) {
+            return false; // Если символ не цифра и не точка, возвращаем false
+        }
+    }
+
+    return true;
+}
+
 int input_number(int from, int to) {
+    string input;
     int num;
-    if (to < from){
+
+    // Если to < from, устанавливаем верхний предел в максимально возможное значение для int
+    if (to < from) {
         to = numeric_limits<int>::max();
     }
+
     do {
         cout << "Значение должно быть целым числом от " << from << " до " << to << ": " << endl;
-        cin >> num;
-        if (cin.fail()) {
-            cin.clear(); // Сбросить ошибку ввода
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Очистить буфер
-            cout << "Ошибка: это не число. Попробуйте снова." << endl;
-        } else if (num < from || num > to) {
-            cout << "Ошибка: число вне диапазона. Попробуйте снова." << endl;
+        cin >> input;
+
+        if (is_int_number(input)) {
+            try {
+                num = stoi(input); // Преобразуем строку в число
+
+                if (num < from || num > to) {
+                    cout << "Ошибка: число вне диапазона. Попробуйте снова." << endl;
+                }
+            } catch (out_of_range&) {
+                cout << "Ошибка: число слишком велико. Попробуйте снова." << endl;
+                num = from - 1; // Обеспечиваем продолжение цикла
+            }
+        } else {
+            cout << "Ошибка: это не целое число. Попробуйте снова." << endl;
+            num = from - 1; // Обеспечиваем продолжение цикла
         }
+
     } while (num < from || num > to);
+
     return num;
 }
 
 float input_number(float from, float to) {
+    string input;
     float num;
-    if (to < from){
+
+    // Если to < from, устанавливаем верхний предел в максимально возможное значение для float
+    if (to < from) {
         to = numeric_limits<float>::max();
     }
+
     do {
-        cout << "Значение должно быть дробным числом от " << from << " до " << to << ": " << endl;
-        cin >> num;
-        if (cin.fail()) {
-            cin.clear(); // Сбросить ошибку ввода
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Очистить буфер
-            cout << "Ошибка: это не число. Попробуйте снова." << endl;
-        } else if (num < from || num > to) {
-            cout << "Ошибка: число вне диапазона. Попробуйте снова." << endl;
+        cout << "Значение должно быть числом с плавающей точкой от " << from << " до " << to << ": " << endl;
+        cin >> input;
+
+        if (is_float_number(input)) {
+            try {
+                num = stof(input); // Преобразуем строку в float
+
+                if (num < from || num > to) {
+                    cout << "Ошибка: число вне диапазона. Попробуйте снова." << endl;
+                }
+            } catch (out_of_range&) {
+                cout << "Ошибка: число слишком велико. Попробуйте снова." << endl;
+                num = from - 1; // Обеспечиваем продолжение цикла
+            }
+        } else {
+            cout << "Ошибка: это не корректное число. Попробуйте снова." << endl;
+            num = from - 1; // Обеспечиваем продолжение цикла
         }
+
     } while (num < from || num > to);
+
     return num;
 }
-
 int select_menu_item(int max_items, bool add_back_button){
-    int choice;
-    do {
-        cout << "Ваш выбор (номер пункта меню):" << endl;
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(32767, '\n');
-        }
-        cin >> choice;
-
-        if (choice <= 0 - add_back_button or choice > max_items) {
-            cout << "Такого пункта в меню нет! Поэтому измените ";
-        }
-    } while (choice <= 0 - add_back_button or choice > max_items);
-    return choice;
+    cout << "Выберете пункт меню:" << endl;
+    return input_number(not add_back_button, max_items);
 }
 
 int main_menu(){
