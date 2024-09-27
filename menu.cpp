@@ -159,7 +159,7 @@ int coefs_operations_menu(){
 
 int dataset_operations_menu(int datatype){
     cout << "Меню для работы с практической частью:" << endl;
-    cout << "1) найти мат. ожидание, дисперсия, коэфиценты эксцесса и асимметрии" << endl;
+    cout << "1) Найти мат. ожидание, дисперсия, коэфиценты эксцесса и асимметрии" << endl;
     cout << "2) Найти плотность" << endl;
     cout << "3) Вывести выборку на экран" << endl;
     cout << "4) Записать выборку в файл" << endl;
@@ -174,7 +174,7 @@ int dataset_operations_menu(int datatype){
 
 void show_stats(const float *stats){
     cout << "Мат. ожидание: " << *stats << endl;
-    cout << "Дисперсия " << *(stats + 1) << endl;
+    cout << "Дисперсия: " << *(stats + 1) << endl;
     cout << "Коэфицент асимметрии: " << *(stats + 2) << endl;
     cout << "Коэфицент эксцесса: " << *(stats + 3) << endl;
 }
