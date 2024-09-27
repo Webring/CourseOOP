@@ -138,7 +138,7 @@ int select_menu_item(int max_items, bool add_back_button){
 int main_menu(){
     cout << "Меню основное:" << endl;
     cout << "1) Основное распределение" << endl;
-    cout << "2) Смесь распредленийпше" << endl;
+    cout << "2) Смесь распределений" << endl;
     cout << "0) Выход" << endl;
 
     return select_menu_item(2, true);
