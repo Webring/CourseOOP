@@ -21,7 +21,7 @@ float get_random_from_0_to_1() {
 
 // Вычисление функции плотности по коэффициентам
 float get_density_by_coefs(float x, float nu_coef, float mu_coef, float lambda_coef) {
-    return 1.0 / (2 * beta(nu_coef + 1, nu_coef + 1)) * pow((1 - pow(((x - mu_coef) / lambda_coef), 2)) / 4, nu_coef);
+    return 1.0 / (lambda_coef * 2 * beta(nu_coef + 1, nu_coef + 1)) * pow((1 - pow(((x - mu_coef) / lambda_coef), 2)) / 4, nu_coef);
 }
 
 // Вычисление мат. ожидания по коэффициентам
@@ -200,7 +200,7 @@ float get_density_by_dataset(float x, float *dataset_begin, float *dataset_end) 
         dataset_iterator++;
     }
     // Возвращение вероятности (функции плотности) в точке
-    return number_of_occurrences / len_of_dataset;
+    return number_of_occurrences / (len_of_dataset * interval_width);
 }
 
 // Вычисление функции плотности всей выборки
@@ -232,7 +232,10 @@ int get_density_array(float *dataset_begin, float *dataset_end, float *&number_o
     float range = maximum_number - minimum_number;
     float interval_width = range / number_of_intervals;
     float first_value = minimum_number - interval_width * 0.5;
-    number_of_occurrences_array_begin = new float[number_of_intervals + 2];
+    number_of_occurrences_array_begin = new float[number_of_intervals + 3];
+    for(int i=0;i<number_of_intervals+3;i++){
+        number_of_occurrences_array_begin[i] = -1;
+    }
     // Определение левой и правой границ интервалов
     float left_border_value = first_value;
     float right_border_value;
@@ -249,10 +252,18 @@ int get_density_array(float *dataset_begin, float *dataset_end, float *&number_o
         left_border_value = right_border_value;
     }
     // помещение в массив начального значения, длины интервала
-    number_of_occurrences_array_begin[number_of_intervals] = float(first_value);
-    number_of_occurrences_array_begin[number_of_intervals + 1] = float(interval_width);
-    number_of_occurrences_array_end = new float(number_of_occurrences_array_begin[number_of_intervals + 1]);
-    return number_of_intervals;
+    if(number_of_occurrences_array_begin[number_of_intervals] == -1){
+        number_of_occurrences_array_begin[number_of_intervals] = float(first_value);
+        number_of_occurrences_array_begin[number_of_intervals + 1] = float(interval_width);
+        number_of_occurrences_array_end = new float(number_of_occurrences_array_begin[number_of_intervals + 1]);
+        return number_of_intervals;
+    }
+    else{
+        number_of_occurrences_array_begin[number_of_intervals + 1] = float(first_value);
+        number_of_occurrences_array_begin[number_of_intervals + 2] = float(interval_width);
+        number_of_occurrences_array_end = new float(number_of_occurrences_array_begin[number_of_intervals + 1]);
+        return number_of_intervals + 1;
+    }
 }
 
 // Моделирование выборки по выборке
@@ -267,9 +278,16 @@ float *modeling_sample_based_on_sample(int sample_volume, float *dataset_begin, 
 
     // Рассчитываем ширину интервалов и минимальное значение для интервалов
     number_of_occurrences_array_end = number_of_occurrences_array_begin + number_of_intervals + 1;
-    float interval_width = *number_of_occurrences_array_end;
-    float first_value = *(number_of_occurrences_array_end - 1);
-
+    float interval_width;
+    float first_value;
+    if(*number_of_occurrences_array_end == -1){
+        interval_width = *(number_of_occurrences_array_end - 1);
+        first_value = *(number_of_occurrences_array_end - 2);
+    }
+    else {
+        interval_width = *number_of_occurrences_array_end;
+        first_value = *(number_of_occurrences_array_end - 1);
+    }
     // Массив для сохранения результирующей выборки
     float *sample_based_on_sample = new float[sample_volume];
 
