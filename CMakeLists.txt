@@ -11,4 +11,5 @@ add_executable(oop
         math.cpp
         math.h
         consts.h
+        utils.h
 )

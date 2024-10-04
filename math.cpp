@@ -1,9 +1,8 @@
 #include "math.h"
 #include "cmath"
+#include "utils.h"
 // Вычисление бета-функции
-double beta(double x, double y) {
-    return std::tgamma(x) * std::tgamma(y) / std::tgamma(x + y);
-}
+
 
 // Моделирование случайной величины
 float modeling_random_x(float nu_coef, float mu_coef, float lambda_coef) {
@@ -12,12 +11,7 @@ float modeling_random_x(float nu_coef, float mu_coef, float lambda_coef) {
     return lambda_coef * sqrt(1 - pow(realisation_of_value_1, 1 / (nu_coef + 0.5))) * cos(2 * M_PI * realisation_of_value_2) + mu_coef;
 }
 
-// Генерация реализации (случайное значение от 0 до 1)
-float get_random_from_0_to_1() {
-    float realisation_of_value;
-    do realisation_of_value = (float) rand() / RAND_MAX; while (realisation_of_value == 0. || realisation_of_value == 1.);
-    return realisation_of_value;
-}
+
 
 // Вычисление функции плотности по коэффициентам
 float get_density_by_coefs(float x, float nu_coef, float mu_coef, float lambda_coef) {
