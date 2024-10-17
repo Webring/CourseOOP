@@ -3,6 +3,7 @@
 
 
 #include "iostream"
+#include "GeneralDistribution/GeneralDistribution.h"
 
 using namespace std;
 
@@ -16,6 +17,7 @@ int dataset_operations_menu(int datatype);
 void show_stats(const float *stats);
 
 void input_3_coefs(float *coefs);
+void input_3_coefs_class(GeneralDistribution distribution,float *coefs);
 void input_7_coefs(float *coefs);
 
 #endif //OOP_MENU_H

@@ -12,4 +12,8 @@ add_executable(oop
         math.h
         consts.h
         utils.h
+        GeneralDistribution/GeneralDistribution.cpp
+        GeneralDistribution/GeneralDistribution.h
+        test.cpp
+        test.h
 )

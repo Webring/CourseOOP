@@ -1,6 +1,7 @@
 #include <limits>  // Для использования числовых пределов (например, для максимального значения int)
 #include "menu.h"  // Заголовочный файл, который, видимо, содержит прототипы функций
 #include "iostream" // Для работы с вводом/выводом
+#include "GeneralDistribution/GeneralDistribution.h"
 
 using namespace std; // Позволяет использовать стандартное пространство имен для упрощения синтаксиса
 
@@ -156,10 +157,12 @@ int select_menu_item(int max_items, bool add_back_button) {
 int main_menu() {
     cout << "Меню основное:" << endl;
     cout << "1) Основное распределение" << endl;
-    cout << "2) Смесь распределений" << endl;
+    cout << "2) Класс основного распределения" << endl;
+    cout << "3) Смесь распределений" << endl;
+    cout << "4) Unit-test" << endl;
     cout << "0) Выход" << endl;
 
-    return select_menu_item(2, true); // В меню 2 основных пункта и "назад" (выход)
+    return select_menu_item(4, true); // В меню 2 основных пункта и "назад" (выход)
 }
 
 // Меню операций с теоретической частью
@@ -211,7 +214,21 @@ void input_3_coefs(float *coefs) {
     cout << "Введите значение lambda (параметр масштаба)" << endl;
     coefs[2] = input_number(0.0000001f, 100000.f);
 }
+void input_3_coefs_class(GeneralDistribution distribution,float *coefs){
+    for (int i = 3; i < 7; i++) {
+        coefs[i] = 0; // Инициализируем параметры с индексом от 3 до 6 нулями
+    }
+    cout << "Введите значение nu (параметр формы)" << endl;
+    coefs[0] = input_number(0.f, 100000.f);
+    distribution.set_nu(coefs[0]);
+    cout << "Введите значение mu (сдвиг по x)" << endl;
+    coefs[1] = input_number(-100000.f, 100000.f);
+    distribution.set_mu(coefs[1]);
+    cout << "Введите значение lambda (параметр масштаба)" << endl;
+    coefs[2] = input_number(0.0000001f, 100000.f);
+    distribution.set_lambda(coefs[2]);
 
+}
 // Функция для ввода 7 параметров для смеси распределений
 void input_7_coefs(float *coefs) {
     cout << "Введите значение nu_1 (параметр формы)" << endl;

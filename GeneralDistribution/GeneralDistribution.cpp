@@ -33,6 +33,15 @@ float GeneralDistribution::modeling_random_x() {
 float GeneralDistribution::get_density(float x) {
     return 1.0 / (lambda * 2 * beta(nu + 1, nu + 1)) * pow((1 - pow(((x - mu) / lambda), 2)) / 4, nu);
 }
+float GeneralDistribution::get_random_from_0_to_1() {
+    float realisation_of_value;
+    do realisation_of_value = (float) rand() / RAND_MAX; while (realisation_of_value == 0. || realisation_of_value == 1.);
+    return realisation_of_value;
+}
+
+double GeneralDistribution::beta(double x, double y) {
+    return tgamma(x) * tgamma(y) / tgamma(x + y);
+}
 
 float GeneralDistribution::get_expectation() {
     return mu;

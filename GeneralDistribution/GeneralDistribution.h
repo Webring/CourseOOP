@@ -3,19 +3,24 @@
 
 #include <string>
 #include "fstream"
-#include "../utils.h"
+// #include "../utils.h"
 #include "cmath"
 
 using namespace std;
 
 class GeneralDistribution {
-    float nu, mu, lambda;
+private:
+    float nu = 1;
+    float mu = 0;
+    float lambda = 1;
 public:
-    GeneralDistribution(float nu_coef, float mu_coef, float lambda_coef) {
-        nu = nu_coef;
-        mu= mu_coef;
-        lambda = lambda_coef;
-    }
+//    GeneralDistribution(float nu_coef, float mu_coef, float lambda_coef) {
+//        nu = nu_coef;
+//        mu= mu_coef;
+//        lambda = lambda_coef;
+//    }
+    float get_random_from_0_to_1();
+    double beta(double x, double y);
     float get_nu() const;
     float get_mu() const;
     float get_lambda() const;
