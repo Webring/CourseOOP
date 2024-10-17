@@ -47,7 +47,7 @@ void test(){
             cout<<"Плотность в мат ожидании: "<< density_general << "\t" << density_class<<endl;
             cout<<"Коэффициент асимметрии: "<< assym_general << "\t" << assym_class<<endl;
             cout<<"Коэффициент эксцесса: "<< excess_general << "\t" << excess_class<<endl;
-            cout<<"Дисперсия: "<< dispersion_general << "\t" << dispersion_class<<endl;
+            cout<<"Дисперсия: "<< dispersion_general << "\t" << dispersion_class<<endl<< endl;
         }
         catch (int error){
             if(error == 0){
