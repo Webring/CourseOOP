@@ -5,8 +5,8 @@
 #include "iostream"
 
 using namespace std;
-
 float get_random_from_0_to_1();
+double beta(double x, double y);
 
 float modeling_random_x(float nu_coef, float mu_coef, float lambda_coef);
 float modeling_random_mix_x(float nu_coef_1, float mu_coef_1, float lambda_coef_1, float nu_coef_2,
