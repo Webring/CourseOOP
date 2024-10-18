@@ -220,14 +220,16 @@ void input_3_coefs_class(GeneralDistribution &distribution,float *coefs){
     }
     cout << "Введите значение nu (параметр формы)" << endl;
     coefs[0] = input_number(0.f, 100000.f);
-    distribution.set_nu(coefs[0]);
+
     cout << "Введите значение mu (сдвиг по x)" << endl;
     coefs[1] = input_number(-100000.f, 100000.f);
-    distribution.set_mu(coefs[1]);
+
     cout << "Введите значение lambda (параметр масштаба)" << endl;
     coefs[2] = input_number(0.0000001f, 100000.f);
+    distribution.set_nu(coefs[0]);
+    distribution.set_mu(coefs[1]);
     distribution.set_lambda(coefs[2]);
-
+    distribution.save_to_file("persistent.txt");
 }
 // Функция для ввода 7 параметров для смеси распределений
 void input_7_coefs(float *coefs) {
