@@ -198,7 +198,6 @@ int main() {
             break;
         case CLASS_OF_BASIC_DISTRIBUTION_INPUT_PAGE:
             input_3_coefs_class(distribution, coefs);
-            cout << "Всё збс\n";
             next = SELECT_OPERATION_FOR_DISTIBUTION_BY_COEFS_PAGE;
             break;
         case MIX_DISTRIBUTION_INPUT_PAGE:

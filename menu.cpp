@@ -214,7 +214,7 @@ void input_3_coefs(float *coefs) {
     cout << "Введите значение lambda (параметр масштаба)" << endl;
     coefs[2] = input_number(0.0000001f, 100000.f);
 }
-void input_3_coefs_class(GeneralDistribution distribution,float *coefs){
+void input_3_coefs_class(GeneralDistribution &distribution,float *coefs){
     for (int i = 3; i < 7; i++) {
         coefs[i] = 0; // Инициализируем параметры с индексом от 3 до 6 нулями
     }
