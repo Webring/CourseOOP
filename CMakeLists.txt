@@ -16,4 +16,8 @@ add_executable(oop
         GeneralDistribution/GeneralDistribution.h
         test.cpp
         test.h
+        MixDistribution/MixDistribution.cpp
+        MixDistribution/MixDistribution.h
+        EmpiricDistribution/EmpiricDistribution.cpp
+        EmpiricDistribution/EmpiricDistribution.h
 )

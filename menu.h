@@ -4,6 +4,7 @@
 
 #include "iostream"
 #include "GeneralDistribution/GeneralDistribution.h"
+#include "MixDistribution/MixDistribution.h"
 
 using namespace std;
 
@@ -19,5 +20,6 @@ void show_stats(const float *stats);
 void input_3_coefs(float *coefs);
 void input_3_coefs_class(GeneralDistribution &distribution,float *coefs);
 void input_7_coefs(float *coefs);
+void input_7_coefs_class(MixDistribution *&mix_distribution,float *coefs);
 
 #endif //OOP_MENU_H

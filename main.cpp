@@ -6,6 +6,7 @@
 #include "chrono"
 #include "GeneralDistribution/GeneralDistribution.h"
 #include "test.h"
+#include "MixDistribution/MixDistribution.h"
 
 using namespace std;
 
@@ -81,7 +82,7 @@ void show_dataset(float *dataset, int &dataset_len) {
 
 // Функция для расчета статистических характеристик
 // datatype — тип данных, coefs — массив коэффициентов распределения, dataset — массив данных, dataset_len — длина массива, stats — массив для хранения статистик
-void calc_stats(int datatype, float *coefs, float *dataset, int &dataset_len, float *stats, GeneralDistribution distr) {
+void calc_stats(int datatype, float *coefs, float *dataset, int &dataset_len, float *stats, GeneralDistribution distr, MixDistribution *&mix_distr) {
     // В зависимости от типа данных используем соответствующие методы для расчета
     switch (datatype) {
         case GENERAL_DISTRIBUTION_DATATYPE: // Общий тип распределения
@@ -103,6 +104,13 @@ void calc_stats(int datatype, float *coefs, float *dataset, int &dataset_len, fl
             stats[2] = get_mix_asymmetry_by_coefs(coefs[0], coefs[1], coefs[2], coefs[3], coefs[4], coefs[5], coefs[6]);
             stats[3] = get_mix_excess_by_coefs(coefs[0], coefs[1], coefs[2], coefs[3], coefs[4], coefs[5], coefs[6]);
             break;
+        case CLASS_OF_MIX_DISTRIBUTION_DATATYPE: // Смесь распределений
+            mix_distr->load_from_file("persistent_mix.txt");
+            stats[0] = mix_distr->get_expectation();
+            stats[1] = mix_distr->get_dispersion();
+            stats[2] = mix_distr->get_asymmetry();
+            stats[3] = mix_distr->get_excess();
+            break;
         case EMPIRICAL_DATATYPE: // Эмпирические данные
             stats[0] = get_expectation_by_dataset(dataset, dataset + dataset_len); // Математическое ожидание
             stats[1] = get_dispersion_by_dataset(dataset, dataset + dataset_len);  // Дисперсия
@@ -114,7 +122,7 @@ void calc_stats(int datatype, float *coefs, float *dataset, int &dataset_len, fl
 
 // Функция для расчета плотности вероятности в точке x
 // x — точка, в которой нужно рассчитать плотность, datatype — тип распределения, coefs — массив коэффициентов распределения, dataset — данные выборки, dataset_len — длина выборки
-float calc_density(float x, int datatype, float *coefs, float *dataset, int &dataset_len, GeneralDistribution distr) {
+float calc_density(float x, int datatype, float *coefs, float *dataset, int &dataset_len, GeneralDistribution distr, MixDistribution *&mix_distr) {
     float density;
     // В зависимости от типа данных используем соответствующий метод для расчета плотности
     switch (datatype) {
@@ -128,6 +136,10 @@ float calc_density(float x, int datatype, float *coefs, float *dataset, int &dat
         case MIX_DISTRIBUTION_DATATYPE: // Смесь распределений
             density = get_mix_density_by_coefs(x, coefs[0], coefs[1], coefs[2], coefs[3], coefs[4], coefs[5], coefs[6]);
             break;
+        case CLASS_OF_MIX_DISTRIBUTION_DATATYPE: // Смесь распределений
+            mix_distr->load_from_file("persistent_mix.txt");
+            density = mix_distr->get_density(x);
+            break;
         case EMPIRICAL_DATATYPE: // Эмпирические данные
             density = get_density_by_dataset(x, dataset, dataset + dataset_len);
             break;
@@ -137,7 +149,7 @@ float calc_density(float x, int datatype, float *coefs, float *dataset, int &dat
 
 // Функция для генерации набора данных (выборки)
 // datatype — тип распределения, dataset — указатель на массив данных, dataset_len — длина выборки, coefs — массив коэффициентов распределения
-void generate_dataset(int &datatype, float *&dataset, int &dataset_len, float *coefs, GeneralDistribution distr) {
+void generate_dataset(int &datatype, float *&dataset, int &dataset_len, float *coefs, GeneralDistribution distr, MixDistribution *&mix_distr) {
     dataset = new float[dataset_len]; // Выделяем память под массив данных
     // В зависимости от типа распределения генерируем выборку
     switch (datatype) {
@@ -155,6 +167,12 @@ void generate_dataset(int &datatype, float *&dataset, int &dataset_len, float *c
         case MIX_DISTRIBUTION_DATATYPE: // Смесь распределений
             for (int i = 0; i < dataset_len; i++) {
                 dataset[i] = modeling_random_mix_x(coefs[0], coefs[1], coefs[2], coefs[3], coefs[4], coefs[5], coefs[6]); // Генерация случайного значения для смеси распределений
+            }
+            break;
+        case CLASS_OF_MIX_DISTRIBUTION_DATATYPE: // Общий тип распределения
+            distr.load_from_file("persistent_mix.txt");
+            for (int i = 0; i < dataset_len; i++) {
+                dataset[i] = mix_distr->random_value(); // Генерация случайного значения по параметрам распределения
             }
             break;
     }
@@ -178,6 +196,7 @@ int main() {
     int output_file_index = 0; // Индекс файла для уникализации имени
     float x, density;          // Переменные для расчета плотности
     GeneralDistribution distribution;
+    MixDistribution* mix_distribution = nullptr;
 
  while (next >= 0) {
     // В зависимости от значения переменной "next" выполняется соответствующий кейс
@@ -210,6 +229,10 @@ int main() {
             // Переходим к странице выбора операций с распределением
             next = SELECT_OPERATION_FOR_DISTIBUTION_BY_COEFS_PAGE;
             break;
+        case CLASS_OF_MIX_DISTRIBUTION_INPUT_PAGE:
+            input_7_coefs_class(mix_distribution, coefs);
+            next = SELECT_OPERATION_FOR_DISTIBUTION_BY_COEFS_PAGE;
+            break;
         case TEST:
             test();
             next = 0;
@@ -230,7 +253,7 @@ int main() {
         case STATS_BY_COEFS_PAGE:{
             auto start = chrono::high_resolution_clock::now();
             // Расчет статистических характеристик на основе коэффициентов распределения
-            calc_stats(datatype, coefs, dataset, dataset_len, stats, distribution);
+            calc_stats(datatype, coefs, dataset, dataset_len, stats, distribution, mix_distribution);
             auto end = chrono::high_resolution_clock ::now();
             std::chrono::duration<double> elapsed = end - start;
             cout << std::fixed << std::setprecision(7);
@@ -248,7 +271,7 @@ int main() {
             x = input_number(-100000.f, 100000.f);  // Ввод точки
             // Расчет плотности в заданной точке
             auto start = chrono::high_resolution_clock::now();
-            density = calc_density(x, datatype, coefs, dataset, dataset_len, distribution);
+            density = calc_density(x, datatype, coefs, dataset, dataset_len, distribution, mix_distribution);
             auto end = chrono::high_resolution_clock ::now();
             std::chrono::duration<double> elapsed = end - start;
             cout << std::fixed << std::setprecision(7);
@@ -266,7 +289,7 @@ int main() {
             dataset_len = input_number(1, 100000);  // Ввод размера выборки
             // Генерация выборки на основе коэффициентов распределения
             auto start = chrono::high_resolution_clock::now();
-            generate_dataset(datatype, dataset, dataset_len, coefs, distribution);
+            generate_dataset(datatype, dataset, dataset_len, coefs, distribution, mix_distribution);
             auto end = chrono::high_resolution_clock ::now();
             std::chrono::duration<double> elapsed = end - start;
             cout << std::fixed << std::setprecision(7);
@@ -289,8 +312,15 @@ int main() {
             break;}
 
         case STATS_BY_DATASET_PAGE:{
+            auto start = chrono::high_resolution_clock::now();
+            // Расчет статистических характеристик на основе коэффициентов распределения
             // Расчет статистических характеристик на основе сгенерированной выборки (эмпирические данные)
-            calc_stats(EMPIRICAL_DATATYPE, coefs, dataset, dataset_len, stats, distribution);
+            calc_stats(EMPIRICAL_DATATYPE, coefs, dataset, dataset_len, stats, distribution, mix_distribution);
+            auto end = chrono::high_resolution_clock ::now();
+            std::chrono::duration<double> elapsed = end - start;
+            cout << std::fixed << std::setprecision(7);
+            cout << "Время выполнения: " << elapsed.count() <<" секунд" <<endl;
+            std::cout << std::defaultfloat;
             // Отображаем рассчитанные статистики
             show_stats(stats);
             // Возвращаемся на страницу операций с выборкой
@@ -298,11 +328,18 @@ int main() {
             break;}
 
         case DENSITY_BY_DATASET_PAGE:{
+
             // Запрос точки, в которой нужно рассчитать плотность по выборке
             cout << "Введите в какой точке нужно считать плотность:" << endl;
             x = input_number(-100000.f, 100000.f);  // Ввод точки
+            auto start = chrono::high_resolution_clock::now();
             // Расчет плотности по выборке
-            density = calc_density(x, EMPIRICAL_DATATYPE, coefs, dataset, dataset_len, distribution);
+            density = calc_density(x, EMPIRICAL_DATATYPE, coefs, dataset, dataset_len, distribution, mix_distribution);
+            auto end = chrono::high_resolution_clock ::now();
+            std::chrono::duration<double> elapsed = end - start;
+            cout << std::fixed << std::setprecision(7);
+            cout << "Время выполнения: " << elapsed.count() <<" секунд" <<endl;
+            std::cout << std::defaultfloat;
             // Вывод плотности
             cout << "Плотность: " << density << endl;
             // Запись массива плотностей в файл
@@ -331,7 +368,13 @@ int main() {
 
         case GENERATE_DATASET_BY_DENSITY_PAGE:{
             // Генерация новой выборки на основе плотности исходной выборки
+            auto start = chrono::high_resolution_clock::now();
             dataset = modeling_sample_based_on_sample(dataset_len, dataset, dataset + dataset_len);
+            auto end = chrono::high_resolution_clock ::now();
+            std::chrono::duration<double> elapsed = end - start;
+            cout << std::fixed << std::setprecision(7);
+            cout << "Время выполнения: " << elapsed.count() <<" секунд" <<endl;
+            std::cout << std::defaultfloat;
             // Возвращаемся на страницу операций с выборкой
             next = SELECT_OPERATION_FOR_DISTIBUTION_BY_DATASET_PAGE;
             break;}
