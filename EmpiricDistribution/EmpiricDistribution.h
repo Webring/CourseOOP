@@ -24,8 +24,8 @@ class EmpiricDistribution {
 
 public:
     EmpiricDistribution(const std::string &filename);
-    EmpiricDistribution(const GeneralDistribution &distribution);
-    EmpiricDistribution(const MixDistribution &distribution);
+    EmpiricDistribution(GeneralDistribution &distribution);
+    EmpiricDistribution(MixDistribution &distribution);
 
     EmpiricDistribution(const EmpiricDistribution &other);
 
