@@ -17,17 +17,6 @@ float MixDistribution::get_density(float &x)
     return p * first.get_density(x) + (1 - p) * second.get_density(x);
 }
 
-//double *MixDistribution::get_parametrs()
-//{
-//    double *result = new double[4];
-//    double *first_parametrs = first.get_parametrs();
-//    double *second_parametrs = second.get_parametrs();
-//    result[0] = (p) * (first_parametrs[0]) + (1 - p) * (second_parametrs[0]);
-//    result[1] = (p * (pow(first_parametrs[0], 2) + first_parametrs[1]) + ((1 - p) * (pow(second_parametrs[0], 2) + second_parametrs[1]))) - pow(result[0], 2);
-//    result[2] = 0.0;
-//    result[3] = ((p * pow(first_parametrs[0] - result[0], 4) + 6 * pow(first_parametrs[0] - result[0], 2) * result[1] + pow(first_parametrs[1], 2) * (first_parametrs[3] + 3)) + ((1 - p) * pow(second_parametrs[0] - result[0], 4) + 6 * pow(second_parametrs[0] - result[0], 2) * result[1] + pow(second_parametrs[1], 2) * (second_parametrs[3] + 3))) / pow(result[1], 2) - 3;
-//    return result;
-//}
 float MixDistribution::get_expectation(){
     return first.get_mu() * p + second.get_mu() * (1 - p);
 }
@@ -68,7 +57,24 @@ float MixDistribution::random_value()
     }
     return first.modeling_random_x();
 }
-
+float MixDistribution::first_get_nu(){
+    return first.get_nu();
+};
+float MixDistribution::first_get_mu(){
+    return first.get_mu();
+};
+float MixDistribution::first_get_lambda(){
+    return first.get_lambda();
+};
+float MixDistribution::second_get_nu(){
+    return second.get_nu();
+};
+float MixDistribution::second_get_mu(){
+    return second.get_nu();
+};
+float MixDistribution::second_get_lambda(){
+    return second.get_nu();
+};
 
 void MixDistribution::first_set_nu(float &value){
     first.set_nu(value);

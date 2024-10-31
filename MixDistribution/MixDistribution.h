@@ -22,6 +22,13 @@ public:
     float get_random_from_0_to_1();
     float random_value();
 
+    float first_get_nu();
+    float first_get_mu();
+    float first_get_lambda();
+    float second_get_nu();
+    float second_get_mu();
+    float second_get_lambda();
+
     void first_set_nu(float &value);
     void first_set_mu(float &value);
     void first_set_lambda(float &value);
