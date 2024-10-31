@@ -13,7 +13,7 @@ float GeneralDistribution::get_lambda() const {
 }
 
 void GeneralDistribution::set_nu(float nu_coef) {
-    if (nu < 0) throw range_error("Nu must be greater or equal then 0!");
+    if (nu_coef < 0) throw range_error("Nu must be greater or equal then 0!");
     nu = nu_coef;
 }
 
@@ -22,7 +22,7 @@ void GeneralDistribution::set_mu(float mu_coef) {
 }
 
 void GeneralDistribution::set_lambda(float lambda_coef) {
-    if (lambda <= 0) throw range_error("Lambda must be greater then 0!");
+    if (lambda_coef <= 0) throw range_error("Lambda must be greater then 0!");
 
     lambda = lambda_coef;
 }

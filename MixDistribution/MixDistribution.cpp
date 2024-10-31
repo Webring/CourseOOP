@@ -101,7 +101,7 @@ void MixDistribution::second_set_lambda(float &value){
 }
 
 void MixDistribution::set_p(const float &value){
-    if (p < 0 or p > 1) throw range_error("P must be in range [0, 1]");
+    if (value < 0 or value > 1) throw range_error("P must be in range [0, 1]");
     p = value;
 }
 
