@@ -1,7 +1,3 @@
-//
-// Created by Viktor Serov on 22.10.2024.
-//
-
 #ifndef OOP_EMPIRICDISTRIBUTION_H
 #define OOP_EMPIRICDISTRIBUTION_H
 
@@ -24,10 +20,14 @@ class EmpiricDistribution {
 
 public:
     EmpiricDistribution(const std::string &filename);
+
     EmpiricDistribution(GeneralDistribution &distribution);
+
     EmpiricDistribution(MixDistribution &distribution);
 
     EmpiricDistribution(const EmpiricDistribution &other);
+
+    EmpiricDistribution &operator=(const EmpiricDistribution &other);
 
     float get_density(float x);
 
@@ -42,6 +42,20 @@ public:
     void save_to_file(const std::string &filename) const;
 
     void load_from_file(const std::string &filename);
+
+    float *getDataset() const;
+
+    float *getDensity() const;
+
+    int getDatasetLen() const;
+
+    int getDensityArrayLen() const;
+
+    float getMaxValue() const;
+
+    float getMinValue() const;
+
+    void setDataset(const float *data, int length);
 };
 
 

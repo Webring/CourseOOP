@@ -1,7 +1,3 @@
-//
-// Created by Viktor Serov on 22.10.2024.
-//
-
 #include "EmpiricDistribution.h"
 
 void EmpiricDistribution::save_to_file(const std::string &filename) const {
@@ -39,38 +35,93 @@ void EmpiricDistribution::load_from_file(const std::string &filename) {
 
     // Читаем данные из файла в массив
     for (int i = 0; i < dataset_len; i++) {
+        file >> dataset[i];
         min_value = min(min_value, dataset[i]);
         max_value = min(max_value, dataset[i]);
-        file >> dataset[i];
     }
 
     file.close(); // Закрываем файл после завершения чтения
 }
 
-EmpiricDistribution::EmpiricDistribution(const std::string &filename){
+EmpiricDistribution::EmpiricDistribution(const std::string &filename) {
     EmpiricDistribution::load_from_file(filename);
 }
-EmpiricDistribution::EmpiricDistribution(GeneralDistribution &distribution){
+
+EmpiricDistribution::EmpiricDistribution(GeneralDistribution &distribution) {
     dataset = new float(dataset_len);
-    for (int i = 0; i < dataset_len; i++)
-    {
+    for (int i = 0; i < dataset_len; i++) {
         dataset[i] = distribution.modeling_random_x();
     }
 }
-EmpiricDistribution::EmpiricDistribution(MixDistribution &distribution){
+
+EmpiricDistribution::EmpiricDistribution(MixDistribution &distribution) {
     dataset = new float(dataset_len);
-    for (int i = 0; i < dataset_len; i++)
-    {
+    for (int i = 0; i < dataset_len; i++) {
         dataset[i] = distribution.random_value();
     }
 }
-EmpiricDistribution::EmpiricDistribution(const EmpiricDistribution &other){
 
+EmpiricDistribution::EmpiricDistribution(const EmpiricDistribution &other): dataset_len(other.dataset_len),
+                                                                            density_array_len(other.density_array_len),
+                                                                            max_value(other.max_value),
+                                                                            min_value(other.min_value) {
+    if (other.dataset_len > 0) {
+        dataset = new float[other.dataset_len];
+        for (int i = 0; i < other.dataset_len; ++i) {
+            dataset[i] = other.dataset[i];
+        }
+    }
+
+    if (other.density_array_len > 0) {
+        density = new float[other.density_array_len];
+        for (int i = 0; i < other.density_array_len; ++i) {
+            density[i] = other.density[i];
+        }
+    }
+}
+
+
+EmpiricDistribution &EmpiricDistribution::operator=(const EmpiricDistribution &other) {
+    if (this == &other) {
+        return *this; // Защита от самоприсваивания
+    }
+
+    // Освобождаем старую память
+    delete[] dataset;
+    delete[] density;
+
+    // Копируем новые значения
+    dataset_len = other.dataset_len;
+    density_array_len = other.density_array_len;
+    max_value = other.max_value;
+    min_value = other.min_value;
+
+    // Копируем массив dataset
+    if (other.dataset_len > 0) {
+        dataset = new float[other.dataset_len];
+        for (int i = 0; i < other.dataset_len; ++i) {
+            dataset[i] = other.dataset[i];
+        }
+    } else {
+        dataset = nullptr;
+    }
+
+    // Копируем массив density
+    if (other.density_array_len > 0) {
+        density = new float[other.density_array_len];
+        for (int i = 0; i < other.density_array_len; ++i) {
+            density[i] = other.density[i];
+        }
+    } else {
+        density = nullptr;
+    }
+
+    return *this;
 }
 
 float EmpiricDistribution::get_density(float x) {
     // Вычисление длины выборки
-//    int len_of_dataset = dataset_end - dataset_begin;
+    //    int len_of_dataset = dataset_end - dataset_begin;
     float number_of_intervals;
     // Вычисление количества интервалов
     if (dataset_len >= 50) {
@@ -155,4 +206,41 @@ float EmpiricDistribution::get_asymmetry() {
         counter++;
     }
     return (sum / counter) / pow(dispersion, 1.5);
+}
+
+
+float *EmpiricDistribution::getDataset() const {
+    return dataset;
+}
+
+float *EmpiricDistribution::getDensity() const {
+    return density;
+}
+
+int EmpiricDistribution::getDatasetLen() const {
+    return dataset_len;
+}
+
+int EmpiricDistribution::getDensityArrayLen() const {
+    return density_array_len;
+}
+
+float EmpiricDistribution::getMaxValue() const {
+    return max_value;
+}
+
+float EmpiricDistribution::getMinValue() const {
+    return min_value;
+}
+
+void EmpiricDistribution::setDataset(const float *data, int length) {
+    dataset_len = length;
+    dataset = new float[dataset_len];
+
+    // Читаем данные из файла в массив
+    for (int i = 0; i < dataset_len; i++) {
+        dataset[i] = data[i];
+        min_value = min(min_value, dataset[i]);
+        max_value = min(max_value, dataset[i]);
+    }
 }
