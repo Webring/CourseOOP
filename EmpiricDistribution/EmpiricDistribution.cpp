@@ -28,7 +28,9 @@ void EmpiricDistribution::load_from_file(const std::string &filename) {
     }
 
     file >> dataset_len;
-
+    if(dataset_len<=0){
+        throw runtime_error("Dataset length is not positive");
+    }
 
     // Выделяем память под новый массив данных
     dataset = new float[dataset_len];
