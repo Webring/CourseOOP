@@ -334,12 +334,10 @@ void EmpiricDistribution::setDataset(const float *data, int length) {
 EmpiricDistribution EmpiricDistribution::modeling_sample_by_sample() {
     EmpiricDistribution new_object(*this);
 
-    float *number_of_occurrences_array_begin = density;
-
     // Получаем массив частот по интервалам
     fill_density_array();
     int number_of_intervals = density_array_len;//get_density_array(dataset_begin, dataset_end, number_of_occurrences_array_begin,number_of_occurrences_array_end);
-
+    float *number_of_occurrences_array_begin = density;
 
     float *number_of_occurrences_array_end = number_of_occurrences_array_begin + number_of_intervals + 1;
     float interval_width;
