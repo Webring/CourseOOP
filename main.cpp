@@ -4,8 +4,10 @@
 #include "math.h"      // Для математических операций
 #include "consts.h"    // Заголовочный файл с константами (например, типы распределений)
 #include "chrono"
+#include <iomanip>
 #include "GeneralDistribution/GeneralDistribution.h"
 #include "test.h"
+#include "EmpiricDistribution/EmpiricDistribution.h"
 #include "MixDistribution/MixDistribution.h"
 
 using namespace std;
@@ -197,6 +199,7 @@ int main() {
     float x, density;          // Переменные для расчета плотности
     GeneralDistribution distribution;
     MixDistribution* mix_distribution = nullptr;
+    EmpiricDistribution* empiric_distribution = nullptr;
 
  while (next >= 0) {
     // В зависимости от значения переменной "next" выполняется соответствующий кейс
@@ -233,7 +236,7 @@ int main() {
             input_7_coefs_class(mix_distribution, coefs);
             next = SELECT_OPERATION_FOR_DISTIBUTION_BY_COEFS_PAGE;
             break;
-        case TEST:
+        case UNIT_TEST_PAGE:
             test();
             next = 0;
             break;
