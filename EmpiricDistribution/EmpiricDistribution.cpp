@@ -1,5 +1,7 @@
 #include "EmpiricDistribution.h"
 
+#include <iostream>
+
 void EmpiricDistribution::save_to_file(const std::string &filename) const {
     // Проверяем, если массив данных не был передан
     if (dataset == nullptr) {
@@ -49,15 +51,17 @@ EmpiricDistribution::EmpiricDistribution(const std::string &filename) {
     EmpiricDistribution::load_from_file(filename);
 }
 
-EmpiricDistribution::EmpiricDistribution(GeneralDistribution &distribution) {
-    dataset = new float(dataset_len);
+EmpiricDistribution::EmpiricDistribution(GeneralDistribution &distribution, int new_dataset_len) {
+    dataset_len = new_dataset_len;
+    dataset = new float[dataset_len];
     for (int i = 0; i < dataset_len; i++) {
         dataset[i] = distribution.modeling_random_x();
     }
 }
 
-EmpiricDistribution::EmpiricDistribution(MixDistribution &distribution) {
-    dataset = new float(dataset_len);
+EmpiricDistribution::EmpiricDistribution(MixDistribution &distribution, int new_dataset_len) {
+    dataset_len = new_dataset_len;
+    dataset = new float[dataset_len];
     for (int i = 0; i < dataset_len; i++) {
         dataset[i] = distribution.random_value();
     }
