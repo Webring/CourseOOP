@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-void EmpiricDistribution::save_to_file(const std::string &filename) const {
+void EmpiricDistribution::save_to_file(const std::string &filename) {
     // Проверяем, если массив данных не был передан
     if (dataset == nullptr) {
         return;
@@ -30,7 +30,7 @@ void EmpiricDistribution::load_from_file(const std::string &filename) {
     }
 
     file >> dataset_len;
-    if(dataset_len<=0){
+    if (dataset_len <= 0) {
         throw runtime_error("Dataset length is not positive");
     }
 
@@ -45,6 +45,84 @@ void EmpiricDistribution::load_from_file(const std::string &filename) {
     }
 
     file.close(); // Закрываем файл после завершения чтения
+}
+
+void EmpiricDistribution::show_dataset() {
+    cout << "Данные выборки (n=" << dataset_len << "):" << endl;
+    for (int i = 0; i < dataset_len; i++) {
+        cout << dataset[i] << endl;
+    }
+}
+
+void EmpiricDistribution::fill_density_array() {
+    // Вычисление длины выборки
+    int number_of_intervals;
+    // Вычисление количества интервалов
+    if (dataset_len >= 50) {
+        number_of_intervals = int(log2(dataset_len)) + 1;
+    } else {
+        number_of_intervals = 8;
+    }
+    // Задание минимума и максимума выборки
+    float minimum_number = *dataset;
+    float maximum_number = *dataset;
+    float *dataset_iterator = dataset;
+    // Поиск минимума и максимума
+    while (dataset_iterator < dataset + dataset_len) {
+        if (*dataset_iterator < minimum_number) {
+            minimum_number = *dataset_iterator;
+        }
+        if (*dataset_iterator > maximum_number) {
+            maximum_number = *dataset_iterator;
+        }
+        dataset_iterator++;
+    }
+    // Вычисление размаха, ширины, первого значения интервала
+    float range = maximum_number - minimum_number;
+    float interval_width = range / number_of_intervals;
+    float first_value = minimum_number - interval_width * 0.5;
+    density = new float[number_of_intervals + 3];
+    for (int i = 0; i < number_of_intervals + 3; i++) {
+        density[i] = -1;
+    }
+    // Определение левой и правой границ интервалов
+    float left_border_value = first_value;
+    float right_border_value;
+    for (int j = 0; j < number_of_intervals; j++) {
+        density[j] = 0;
+        right_border_value = first_value + interval_width * (j + 1);
+        dataset_iterator = dataset;
+        for (int i = 0; i < dataset_len; i++) {
+            if (*dataset_iterator < right_border_value and *dataset_iterator >= left_border_value) {
+                density[j]++; // Помещение в массив количества элементов, вошедших в интервал
+            }
+            dataset_iterator++;
+        }
+        left_border_value = right_border_value;
+    }
+    // помещение в массив начального значения, длины интервала
+    if (density[number_of_intervals] == -1) {
+        density[number_of_intervals] = float(first_value);
+        density[number_of_intervals + 1] = float(interval_width);
+        density_array_len = number_of_intervals;
+    } else {
+        density[number_of_intervals + 1] = float(first_value);
+        density[number_of_intervals + 2] = float(interval_width);
+        density_array_len = number_of_intervals + 1;
+    }
+}
+
+void EmpiricDistribution::density_to_file(const string &filename) {
+    fill_density_array();
+
+    ofstream file(filename);
+
+    // Записываем массив плотностей в файл
+    for (auto i = 0; i < density_array_len + 2; i++) {
+        file << *(density + i) << endl;
+    }
+
+    file.close(); // Закрываем файл после завершения записи
 }
 
 EmpiricDistribution::EmpiricDistribution(const std::string &filename) {
@@ -127,7 +205,7 @@ EmpiricDistribution &EmpiricDistribution::operator=(const EmpiricDistribution &o
 
 float EmpiricDistribution::get_density(float x) {
     // Вычисление длины выборки
-    //    int len_of_dataset = dataset_end - dataset_begin;
+    //    int dataset_len = dataset_end - dataset;
     float number_of_intervals;
     // Вычисление количества интервалов
     if (dataset_len >= 50) {

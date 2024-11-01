@@ -158,13 +158,11 @@ int select_menu_item(int max_items, bool add_back_button) {
 int main_menu() {
     cout << "Меню основное:" << endl;
     cout << "1) Основное распределение" << endl;
-    cout << "2) Класс основного распределения" << endl;
-    cout << "3) Смесь распределений" << endl;
-    cout << "4) Класс смеси распределений" << endl;
-    cout << "5) Unit-test" << endl;
+    cout << "2) Смесь распределений" << endl;
+    cout << "3) Unit-test" << endl;
     cout << "0) Выход" << endl;
 
-    return select_menu_item(5, true); // В меню 2 основных пункта и "назад" (выход)
+    return select_menu_item(3, true); // В меню 2 основных пункта и "назад" (выход)
 }
 
 // Меню операций с теоретической частью

@@ -39,9 +39,17 @@ public:
 
     float get_asymmetry();
 
-    void save_to_file(const std::string &filename) const;
+    void save_to_file(const std::string &filename);
 
     void load_from_file(const std::string &filename);
+
+    void show_dataset();
+
+    void density_to_file(const string &filename);
+
+    void fill_density_array();
+
+    EmpiricDistribution modeling_sample_by_sample();
 
     float *getDataset() const;
 
