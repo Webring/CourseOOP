@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "../math.h"
+
 void EmpiricDistribution::save_to_file(const std::string &filename) {
     // Проверяем, если массив данных не был передан
     if (dataset == nullptr) {
@@ -327,4 +329,58 @@ void EmpiricDistribution::setDataset(const float *data, int length) {
         min_value = min(min_value, dataset[i]);
         max_value = min(max_value, dataset[i]);
     }
+}
+
+EmpiricDistribution EmpiricDistribution::modeling_sample_by_sample() {
+    EmpiricDistribution new_object(*this);
+
+    float *number_of_occurrences_array_begin = density;
+
+    // Получаем массив частот по интервалам
+    fill_density_array();
+    int number_of_intervals = density_array_len;//get_density_array(dataset_begin, dataset_end, number_of_occurrences_array_begin,number_of_occurrences_array_end);
+
+
+    float *number_of_occurrences_array_end = number_of_occurrences_array_begin + number_of_intervals + 1;
+    float interval_width;
+    float first_value;
+    if (*number_of_occurrences_array_end == -1) {
+        interval_width = *(number_of_occurrences_array_end - 1);
+        first_value = *(number_of_occurrences_array_end - 2);
+    } else {
+        interval_width = *number_of_occurrences_array_end;
+        first_value = *(number_of_occurrences_array_end - 1);
+    }
+    // Массив для сохранения результирующей выборки
+    float *sample_based_on_sample = new float[dataset_len];
+
+    // Переменные для хранения случайной реализации и накопленной вероятности
+    float realisation_of_value;
+    float cumulative_probability;
+    float x = 0;
+    float *array_iterator = NULL;
+
+    // Моделирование значений на основе частот по интервалам
+    for (int i = 0; i < dataset_len; i++) {
+        // Получаем случайное число от 0 до 1
+        realisation_of_value = get_random_from_0_to_1();
+        cumulative_probability = 0;
+        array_iterator = number_of_occurrences_array_begin;
+        // Определяем интервал, к которому принадлежит случайное значение
+        for (int j = 0; j < number_of_intervals; j++) {
+            cumulative_probability += (*array_iterator * 1.0) / dataset_len;
+            if (realisation_of_value < cumulative_probability) {
+                // Рассчитываем значение выборки для соответствующего интервала
+                x = (interval_width * realisation_of_value) + (j * interval_width + first_value);
+                break;
+            }
+            array_iterator++;
+        }
+        sample_based_on_sample[i] = x; // Сохраняем результат
+    }
+
+    new_object.setDataset(sample_based_on_sample, dataset_len);
+
+    return new_object;
+
 }

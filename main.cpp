@@ -280,6 +280,8 @@ int main() {
                 auto start = chrono::high_resolution_clock::now();
                 // Todo
                 // dataset = modeling_sample_based_on_sample(dataset_len, dataset, dataset + dataset_len);
+                EmpiricDistribution temp = empiric_distribution->modeling_sample_by_sample();
+                empiric_distribution = &temp;
                 print_exec_time(start);
                 // Возвращаемся на страницу операций с выборкой
                 next = SELECT_OPERATION_FOR_DISTIBUTION_BY_DATASET_PAGE;
