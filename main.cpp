@@ -55,7 +55,7 @@ void calc_stats(int datatype, float *coefs, float *stats, GeneralDistribution di
     }
 }
 
-void print_exec_time(auto start = chrono::high_resolution_clock::now()) {
+void print_exec_time(chrono::time_point<chrono::high_resolution_clock> start = chrono::high_resolution_clock::now()) {
     auto end = chrono::high_resolution_clock::now();
     chrono::duration<double> elapsed = end - start;
     cout << fixed << setprecision(7);
