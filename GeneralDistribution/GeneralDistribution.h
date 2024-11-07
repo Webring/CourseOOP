@@ -4,10 +4,11 @@
 #include <string>
 #include "fstream"
 #include "cmath"
+#include "../interfaces.h"
 
 using namespace std;
 
-class GeneralDistribution {
+class GeneralDistribution : public IDistribution, public IPersistent {
     float nu = 1;
     float mu = 0;
     float lambda = 1;
@@ -38,21 +39,21 @@ public:
 
     void set_lambda(float lambda_coef);
 
-    float modeling_random_x();
+    float modeling_random_x() override;
 
-    float get_density(float x);
+    float get_density(float x) override;
 
-    float get_expectation();
+    float get_expectation() override;
 
-    float get_dispersion();
+    float get_dispersion() override;
 
-    float get_excess();
+    float get_excess() override;
 
-    float get_asymmetry();
+    float get_asymmetry() override;
 
-    void save_to_file(const std::string &filename) const;
+    void save_to_file(const std::string &filename) const override;
 
-    void load_from_file(const std::string &filename);
+    void load_from_file(const std::string &filename) override;
 };
 
 

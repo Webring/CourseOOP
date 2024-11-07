@@ -4,7 +4,7 @@
 
 #include "../math.h"
 
-void EmpiricDistribution::save_to_file(const std::string &filename) {
+void EmpiricDistribution::save_to_file(const std::string &filename) const {
     // Проверяем, если массив данных не был передан
     if (dataset == nullptr) {
         return;
@@ -131,7 +131,7 @@ EmpiricDistribution::EmpiricDistribution(const std::string &filename) {
     EmpiricDistribution::load_from_file(filename);
 }
 
-EmpiricDistribution::EmpiricDistribution(GeneralDistribution &distribution, int new_dataset_len) {
+EmpiricDistribution::EmpiricDistribution(IDistribution &distribution, int new_dataset_len) {
     dataset_len = new_dataset_len;
     dataset = new float[dataset_len];
     for (int i = 0; i < dataset_len; i++) {
@@ -139,13 +139,6 @@ EmpiricDistribution::EmpiricDistribution(GeneralDistribution &distribution, int 
     }
 }
 
-EmpiricDistribution::EmpiricDistribution(MixDistribution &distribution, int new_dataset_len) {
-    dataset_len = new_dataset_len;
-    dataset = new float[dataset_len];
-    for (int i = 0; i < dataset_len; i++) {
-        dataset[i] = distribution.random_value();
-    }
-}
 
 EmpiricDistribution::EmpiricDistribution(const EmpiricDistribution &other): dataset_len(other.dataset_len),
                                                                             density_array_len(other.density_array_len),
@@ -331,12 +324,21 @@ void EmpiricDistribution::setDataset(const float *data, int length) {
     }
 }
 
+float EmpiricDistribution::modeling_random_x() {
+    if (dataset == nullptr || dataset_len == 0) {
+        throw runtime_error("Dataset is empty");
+    }
+    int random_index = rand() % dataset_len;
+    return dataset[random_index];
+}
+
 EmpiricDistribution EmpiricDistribution::modeling_sample_by_sample() {
     EmpiricDistribution new_object(*this);
 
     // Получаем массив частот по интервалам
     fill_density_array();
-    int number_of_intervals = density_array_len;//get_density_array(dataset_begin, dataset_end, number_of_occurrences_array_begin,number_of_occurrences_array_end);
+    int number_of_intervals = density_array_len;
+    //get_density_array(dataset_begin, dataset_end, number_of_occurrences_array_begin,number_of_occurrences_array_end);
     float *number_of_occurrences_array_begin = density;
 
     float *number_of_occurrences_array_end = number_of_occurrences_array_begin + number_of_intervals + 1;
@@ -380,5 +382,4 @@ EmpiricDistribution EmpiricDistribution::modeling_sample_by_sample() {
     new_object.setDataset(sample_based_on_sample, dataset_len);
 
     return new_object;
-
 }

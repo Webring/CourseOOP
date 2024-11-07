@@ -14,7 +14,7 @@ using namespace std;
 
 // Функция для расчета статистических характеристик
 // datatype — тип данных, coefs — массив коэффициентов распределения, dataset — массив данных, dataset_len — длина массива, stats — массив для хранения статистик
-void calc_stats(int datatype, float *coefs, float *stats, GeneralDistribution distr, MixDistribution *&mix_distr,
+void calc_stats(int datatype, float *coefs, float *stats, GeneralDistribution distr, MixDistribution<GeneralDistribution, GeneralDistribution> *&mix_distr,
                 EmpiricDistribution *empiric_distribution) {
     // В зависимости от типа данных используем соответствующие методы для расчета
     switch (datatype) {
@@ -25,7 +25,7 @@ void calc_stats(int datatype, float *coefs, float *stats, GeneralDistribution di
             stats[3] = get_excess_by_coefs(coefs[0], coefs[1], coefs[2]); // Коэффициент эксцесса
             break;
         case CLASS_OF_GENERAL_DISTRIBUTION_DATATYPE:
-            distr.load_from_file("persistent.txt");
+            // distr.load_from_file("persistent.txt");
             stats[0] = distr.get_expectation();
             stats[1] = distr.get_dispersion();
             stats[2] = distr.get_asymmetry();
@@ -40,7 +40,7 @@ void calc_stats(int datatype, float *coefs, float *stats, GeneralDistribution di
             stats[3] = get_mix_excess_by_coefs(coefs[0], coefs[1], coefs[2], coefs[3], coefs[4], coefs[5], coefs[6]);
             break;
         case CLASS_OF_MIX_DISTRIBUTION_DATATYPE: // Смесь распределений
-            mix_distr->load_from_file("persistent_mix.txt");
+            // mix_distr->load_from_file("persistent_mix.txt");
             stats[0] = mix_distr->get_expectation();
             stats[1] = mix_distr->get_dispersion();
             stats[2] = mix_distr->get_asymmetry();
@@ -66,7 +66,7 @@ void print_exec_time(chrono::time_point<chrono::high_resolution_clock> start = c
 // Функция для расчета плотности вероятности в точке x
 // x — точка, в которой нужно рассчитать плотность, datatype — тип распределения, coefs — массив коэффициентов распределения, dataset — данные выборки, dataset_len — длина выборки
 float calc_density(float x, int datatype, float *coefs, GeneralDistribution distr,
-                   MixDistribution *&mix_distr, EmpiricDistribution *empiric_distribution) {
+                   MixDistribution<GeneralDistribution, GeneralDistribution> *&mix_distr, EmpiricDistribution *empiric_distribution) {
     float density;
     // В зависимости от типа данных используем соответствующий метод для расчета плотности
     switch (datatype) {
@@ -74,14 +74,14 @@ float calc_density(float x, int datatype, float *coefs, GeneralDistribution dist
             density = get_density_by_coefs(x, coefs[0], coefs[1], coefs[2]);
             break;
         case CLASS_OF_GENERAL_DISTRIBUTION_DATATYPE:
-            distr.load_from_file("persistent.txt");
+            // distr.load_from_file("persistent.txt");
             density = distr.get_density(x);
             break;
         case MIX_DISTRIBUTION_DATATYPE: // Смесь распределений
             density = get_mix_density_by_coefs(x, coefs[0], coefs[1], coefs[2], coefs[3], coefs[4], coefs[5], coefs[6]);
             break;
         case CLASS_OF_MIX_DISTRIBUTION_DATATYPE: // Смесь распределений
-            mix_distr->load_from_file("persistent_mix.txt");
+            // mix_distr->load_from_file("persistent_mix.txt");
             density = mix_distr->get_density(x);
             break;
         case EMPIRICAL_DATATYPE: // Эмпирические данные
@@ -109,7 +109,7 @@ int main() {
     int output_file_index = 0; // Индекс файла для уникализации имени
     float x, density; // Переменные для расчета плотности
     GeneralDistribution distribution;
-    MixDistribution *mix_distribution = nullptr;
+    MixDistribution<GeneralDistribution, GeneralDistribution> *mix_distribution = nullptr;
     EmpiricDistribution *empiric_distribution = nullptr;
 
     while (next >= 0) {
@@ -137,7 +137,7 @@ int main() {
             case MIX_DISTRIBUTION_INPUT_PAGE:
                 // Вводим 7 коэффициентов для смеси распределений
                 input_7_coefs(coefs);
-                mix_distribution = new MixDistribution(coefs[0],
+                mix_distribution = new MixDistribution<GeneralDistribution, GeneralDistribution>(coefs[0],
                                                    coefs[1],
                                                    coefs[2],
                                                    coefs[3],
@@ -267,7 +267,7 @@ int main() {
             case DATASET_TO_FILE_PAGE: {
                 // Запись выборки в файл
                 //write_dataset_to_file(dataset, dataset_len, output_file_index);
-                empiric_distribution->save_to_file("empiric_distribution.txt");
+                // empiric_distribution->save_to_file("empiric_distribution.txt");
                 // Увеличиваем индекс файла для уникальности
                 output_file_index++;
                 // Возвращаемся на страницу операций с выборкой

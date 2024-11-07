@@ -2,7 +2,6 @@
 #include "menu.h"  // Заголовочный файл, который, видимо, содержит прототипы функций
 #include "iostream" // Для работы с вводом/выводом
 #include "GeneralDistribution/GeneralDistribution.h"
-#include "MixDistribution/MixDistribution.h"
 
 using namespace std; // Позволяет использовать стандартное пространство имен для упрощения синтаксиса
 
@@ -214,23 +213,7 @@ void input_3_coefs(float *coefs) {
     cout << "Введите значение lambda (параметр масштаба)" << endl;
     coefs[2] = input_number(0.0000001f, 100000.f);
 }
-void input_3_coefs_class(GeneralDistribution &distribution,float *coefs){
-    for (int i = 3; i < 7; i++) {
-        coefs[i] = 0; // Инициализируем параметры с индексом от 3 до 6 нулями
-    }
-    cout << "Введите значение nu (параметр формы)" << endl;
-    coefs[0] = input_number(0.f, 100000.f);
 
-    cout << "Введите значение mu (сдвиг по x)" << endl;
-    coefs[1] = input_number(-100000.f, 100000.f);
-
-    cout << "Введите значение lambda (параметр масштаба)" << endl;
-    coefs[2] = input_number(0.0000001f, 100000.f);
-    distribution.set_nu(coefs[0]);
-    distribution.set_mu(coefs[1]);
-    distribution.set_lambda(coefs[2]);
-    distribution.save_to_file("persistent.txt");
-}
 // Функция для ввода 7 параметров для смеси распределений
 void input_7_coefs(float *coefs) {
     cout << "Введите значение nu_1 (параметр формы)" << endl;
@@ -247,22 +230,4 @@ void input_7_coefs(float *coefs) {
     coefs[5] = input_number(0.0000001f, 100000.f);
     cout << "Введите значение p (Вероятность)" << endl;
     coefs[6] = input_number(0.f, 1.f);
-}
-void input_7_coefs_class(MixDistribution *&mix_distribution,float *coefs) {
-    cout << "Введите значение nu_1 (параметр формы)" << endl;
-    coefs[0] = input_number(0.f, 100000.f);
-    cout << "Введите значение mu_1 (сдвиг по x)" << endl;
-    coefs[1] = input_number(-100000.f, 100000.f);
-    cout << "Введите значение lambda_1 (параметр масштаба)" << endl;
-    coefs[2] = input_number(0.0000001f, 100000.f);
-    cout << "Введите значение nu_2 (параметр формы)" << endl;
-    coefs[3] = input_number(0.f, 100000.f);
-    cout << "Введите значение mu_2 (сдвиг по x)" << endl;
-    coefs[4] = input_number(-100000.f, 100000.f);
-    cout << "Введите значение lambda_2 (параметр масштаба)" << endl;
-    coefs[5] = input_number(0.0000001f, 100000.f);
-    cout << "Введите значение p (Вероятность)" << endl;
-    coefs[6] = input_number(0.f, 1.f);
-    mix_distribution = new MixDistribution(coefs[0],coefs[1],coefs[2],coefs[3],coefs[4],coefs[5],coefs[6]);
-    mix_distribution->save_to_file("persistent_mix.txt");
 }

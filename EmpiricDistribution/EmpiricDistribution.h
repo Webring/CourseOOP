@@ -9,7 +9,7 @@
 
 using namespace std;
 
-class EmpiricDistribution {
+class EmpiricDistribution : public IDistribution, public IPersistent {
     float *dataset = nullptr;
     float *density = nullptr;
     int dataset_len = 0;
@@ -21,29 +21,29 @@ class EmpiricDistribution {
 public:
     EmpiricDistribution(const std::string &filename);
 
-    EmpiricDistribution(GeneralDistribution &distribution, int new_dataset_len);
-
-    EmpiricDistribution(MixDistribution &distribution, int new_dataset_len);
+    EmpiricDistribution(IDistribution &distribution, int new_dataset_len);
 
     EmpiricDistribution(const EmpiricDistribution &other);
 
     EmpiricDistribution &operator=(const EmpiricDistribution &other);
 
-    float get_density(float x);
+    float get_density(float x) override;
 
-    float get_expectation();
+    float get_expectation() override;
 
-    float get_dispersion();
+    float get_dispersion() override;
 
-    float get_excess();
+    float get_excess() override;
 
-    float get_asymmetry();
+    float get_asymmetry() override;
 
-    void save_to_file(const std::string &filename);
+    void save_to_file(const std::string &filename) const override;
 
-    void load_from_file(const std::string &filename);
+    void load_from_file(const std::string &filename) override;
 
     void show_dataset();
+
+    float modeling_random_x() override;
 
     void density_to_file(const string &filename);
 
