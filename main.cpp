@@ -25,7 +25,7 @@ void calc_stats(int datatype, float *coefs, float *stats, GeneralDistribution di
             stats[3] = get_excess_by_coefs(coefs[0], coefs[1], coefs[2]); // Коэффициент эксцесса
             break;
         case CLASS_OF_GENERAL_DISTRIBUTION_DATATYPE:
-            // distr.load_from_file("persistent.txt");
+            distr.load_from_file("persistent_general.txt");
             stats[0] = distr.get_expectation();
             stats[1] = distr.get_dispersion();
             stats[2] = distr.get_asymmetry();
@@ -40,7 +40,7 @@ void calc_stats(int datatype, float *coefs, float *stats, GeneralDistribution di
             stats[3] = get_mix_excess_by_coefs(coefs[0], coefs[1], coefs[2], coefs[3], coefs[4], coefs[5], coefs[6]);
             break;
         case CLASS_OF_MIX_DISTRIBUTION_DATATYPE: // Смесь распределений
-            // mix_distr->load_from_file("persistent_mix.txt");
+            mix_distr->load_from_file("persistent_general.txt");
             stats[0] = mix_distr->get_expectation();
             stats[1] = mix_distr->get_dispersion();
             stats[2] = mix_distr->get_asymmetry();
@@ -74,14 +74,14 @@ float calc_density(float x, int datatype, float *coefs, GeneralDistribution dist
             density = get_density_by_coefs(x, coefs[0], coefs[1], coefs[2]);
             break;
         case CLASS_OF_GENERAL_DISTRIBUTION_DATATYPE:
-            // distr.load_from_file("persistent.txt");
+            distr.load_from_file("persistent_general.txt");
             density = distr.get_density(x);
             break;
         case MIX_DISTRIBUTION_DATATYPE: // Смесь распределений
             density = get_mix_density_by_coefs(x, coefs[0], coefs[1], coefs[2], coefs[3], coefs[4], coefs[5], coefs[6]);
             break;
         case CLASS_OF_MIX_DISTRIBUTION_DATATYPE: // Смесь распределений
-            // mix_distr->load_from_file("persistent_mix.txt");
+            mix_distr->load_from_file("persistent_mix.txt");
             density = mix_distr->get_density(x);
             break;
         case EMPIRICAL_DATATYPE: // Эмпирические данные
@@ -131,6 +131,7 @@ int main() {
                 // Вводим 3 коэффициента для базового распределения
                 input_3_coefs(coefs);
                 distribution = GeneralDistribution(coefs[0], coefs[1], coefs[2]);
+                distribution.save_to_file("persistent_general.txt");
             // Переходим к странице выбора операций с распределением
                 next = SELECT_OPERATION_FOR_DISTIBUTION_BY_COEFS_PAGE;
                 break;
@@ -144,6 +145,7 @@ int main() {
                                                    coefs[4],
                                                    coefs[5],
                                                    coefs[6]);
+                mix_distribution->save_to_file("persistent_mix.txt");
             // Переходим к странице выбора операций с распределением
                 next = SELECT_OPERATION_FOR_DISTIBUTION_BY_COEFS_PAGE;
                 break;
