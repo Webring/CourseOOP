@@ -21,4 +21,6 @@ add_executable(oop
         EmpiricDistribution/EmpiricDistribution.cpp
         EmpiricDistribution/EmpiricDistribution.h
         interfaces.h
+        Estimate/Estimate.cpp
+        Estimate/Estimate.h
 )

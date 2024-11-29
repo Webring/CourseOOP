@@ -4,12 +4,11 @@
 #include "string"
 #include <limits>
 #include "../GeneralDistribution/GeneralDistribution.h"
-#include "../MixDistribution/MixDistribution.h"
 
 
 using namespace std;
 
-class EmpiricDistribution : public IDistribution, public IPersistent {
+class EmpiricDistribution : public IDistribution, public IPersistent, public IObserverable{
     float *dataset = nullptr;
     float *density = nullptr;
     int dataset_len = 0;
