@@ -8,7 +8,7 @@
 
 using namespace std;
 
-class EmpiricDistribution : public IDistribution, public IPersistent, public IObserverable{
+class EmpiricDistribution : public IDistribution, public IPersistent, public Observable{
     float *dataset = nullptr;
     float *density = nullptr;
     int dataset_len = 0;

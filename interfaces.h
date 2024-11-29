@@ -25,13 +25,14 @@ struct IPersistent {
 
 
 struct IObserver {
-    virtual void update() =0;
+    virtual void update() = 0;
 };
 
 
-struct IObserverable {
+class Observable {
     std::forward_list<IObserver *> observers;
 
+public:
     void attach(IObserver *obs) {
         observers.push_front(obs);
     }
