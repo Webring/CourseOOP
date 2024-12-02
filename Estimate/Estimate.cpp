@@ -12,22 +12,19 @@ void Estimate::estimate() {
     mu = emperic_distribution.get_expectation();
 
     double numerator = 0, denominator = 0, x = 0, current_w = 0;
-
+    double z;
     for (int k = 0; k < p; k++) {
         for (int i = 0; i < emperic_distribution.getDatasetLen(); i++) {
-            // Это сигма
             x = emperic_distribution.getDataset()[i];
-            current_w = weight((x - mu) / sigma);
+            z = (x - mu) / sigma;
+            current_w = weight(z);
             numerator += current_w * x;
             denominator += current_w;
+            if(k == p-1){
+                weightValues.push_back(current_w);
+            }
         }
         mu = numerator / denominator;
     }
 }
 
-double Estimate::ro(double z) {
-    if (abs(z) < c) {
-        return 1.0 / 9.0 * pow(z / c, 2) * (2 * pow(z / c, degree * 2) - 7 * pow(z / c, degree) + 14);
-    }
-    return 1;
-}

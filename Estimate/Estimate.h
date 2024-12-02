@@ -2,7 +2,8 @@
 #define ESTIMATE_H
 #include "../EmpiricDistribution/EmpiricDistribution.h"
 #include "vector"
-#define var 13
+#include "iostream"
+#define var 12
 #define degree (2 * (var-10))
 
 using namespace std;
@@ -13,8 +14,7 @@ class Estimate : public IObserver {
     double c;
     int p;
     double mu;
-    vector<vector<double>> roValues;
-    vector<vector<double>> zValues;
+    vector<double> weightValues;
 
     void estimate();
 
@@ -23,7 +23,7 @@ public:
                                                                                sigma(sigma0),
                                                                                c(c0),
                                                                                p(p0) {
-        estimate();
+//        estimate();
         emperic_distribution.attach(this);
     }
 
@@ -35,13 +35,9 @@ public:
         return mu;
     };
 
-    double ro(double x);
-    vector<vector<double>> get_ro() {
-        return roValues;
+    vector<double> get_weight() {
+        return weightValues;
     };
-    vector<vector<double>> get_z() {
-        return zValues;
-    }
 
     double weight(double x) const; // функция для вычисления веса
     void update() override {

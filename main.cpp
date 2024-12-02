@@ -175,17 +175,22 @@ int main() {
 
                 Estimate est(e, sqrt(g1.get_dispersion()), c, steps);
                 e.notify();
-                cout << "Теоритическое значение: " << g1.get_expectation() << endl;
+                cout << "Теоретическое значение: " << g1.get_expectation() << endl;
                 cout << "М - оценка: " << est.get_mu() << endl;
 
                 cout << "Хотите увидеть графики?" << endl;
                 cout << "1) Да" << endl;
                 cout << "2) Сохранить в файл" << endl;
                 cout << "3) Нет" << endl;
+                vector<double> weights = est.get_weight();
+                float *dataset = e.getDataset();
+                int dataset_len = e.getDatasetLen();
+                vector<double> x(dataset, dataset+dataset_len);
+
                 int choice = input_number(1, 3);
                 if (choice < 3) {
                     Plotter p;
-
+                    p.scatter(x,weights, "График весовой функции");
                     if (choice == 1) {
                         p.show();
                     } else {
@@ -194,6 +199,7 @@ int main() {
                         cin >> filename;
                         p.save(filename);
                     }
+                    p.clearPlots();
                 }
 
 
