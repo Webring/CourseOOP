@@ -10,6 +10,7 @@ class MixDistribution : public IDistribution, public IPersistent {
 
 public:
     MixDistribution(float nu1, float mu1, float lambda1, float nu2, float mu2, float lambda2, float propose);
+    MixDistribution(Distribution1 d1, Distribution2 d2,  float propose);
 
     float get_density(float x) override;
     float get_expectation() override;

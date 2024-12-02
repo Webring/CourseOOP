@@ -159,9 +159,10 @@ int main_menu() {
     cout << "1) Основное распределение" << endl;
     cout << "2) Смесь распределений" << endl;
     cout << "3) Unit-test" << endl;
+    cout << "4) М-оценки" << endl;
     cout << "0) Выход" << endl;
 
-    return select_menu_item(3, true); // В меню 2 основных пункта и "назад" (выход)
+    return select_menu_item(4, true); // В меню 2 основных пункта и "назад" (выход)
 }
 
 // Меню операций с теоретической частью

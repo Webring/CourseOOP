@@ -12,6 +12,14 @@ MixDistribution<Distribution1, Distribution2>::MixDistribution(float nu1, float 
     set_p(propose);
 }
 
+
+template<class Distribution1, class Distribution2>
+MixDistribution<Distribution1, Distribution2>::MixDistribution(Distribution1 d1, Distribution2 d2,  float propose) {
+    first = Distribution1(d1);
+    second = Distribution2(d2);
+    set_p(propose);
+}
+
 template<class Distribution1, class Distribution2>
 float MixDistribution<Distribution1, Distribution2>::get_density(float x) {
     return p * first.get_density(x) + (1 - p) * second.get_density(x);

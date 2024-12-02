@@ -8,13 +8,16 @@
 #include "GeneralDistribution/GeneralDistribution.h"
 #include "EmpiricDistribution/EmpiricDistribution.h"
 #include "MixDistribution/MixDistribution.h"
+#include "Plotter/Plotter.h"
 #include "test.h"
+#include "Estimate/Estimate.h"
 
 using namespace std;
 
 // Функция для расчета статистических характеристик
 // datatype — тип данных, coefs — массив коэффициентов распределения, dataset — массив данных, dataset_len — длина массива, stats — массив для хранения статистик
-void calc_stats(int datatype, float *coefs, float *stats, GeneralDistribution distr, MixDistribution<GeneralDistribution, GeneralDistribution> *&mix_distr,
+void calc_stats(int datatype, float *coefs, float *stats, GeneralDistribution distr,
+                MixDistribution<GeneralDistribution, GeneralDistribution> *&mix_distr,
                 EmpiricDistribution *empiric_distribution) {
     // В зависимости от типа данных используем соответствующие методы для расчета
     switch (datatype) {
@@ -66,7 +69,8 @@ void print_exec_time(chrono::time_point<chrono::high_resolution_clock> start = c
 // Функция для расчета плотности вероятности в точке x
 // x — точка, в которой нужно рассчитать плотность, datatype — тип распределения, coefs — массив коэффициентов распределения, dataset — данные выборки, dataset_len — длина выборки
 float calc_density(float x, int datatype, float *coefs, GeneralDistribution distr,
-                   MixDistribution<GeneralDistribution, GeneralDistribution> *&mix_distr, EmpiricDistribution *empiric_distribution) {
+                   MixDistribution<GeneralDistribution, GeneralDistribution> *&mix_distr,
+                   EmpiricDistribution *empiric_distribution) {
     float density;
     // В зависимости от типа данных используем соответствующий метод для расчета плотности
     switch (datatype) {
@@ -139,12 +143,12 @@ int main() {
                 // Вводим 7 коэффициентов для смеси распределений
                 input_7_coefs(coefs);
                 mix_distribution = new MixDistribution<GeneralDistribution, GeneralDistribution>(coefs[0],
-                                                   coefs[1],
-                                                   coefs[2],
-                                                   coefs[3],
-                                                   coefs[4],
-                                                   coefs[5],
-                                                   coefs[6]);
+                    coefs[1],
+                    coefs[2],
+                    coefs[3],
+                    coefs[4],
+                    coefs[5],
+                    coefs[6]);
                 mix_distribution->save_to_file("persistent_mix.txt");
             // Переходим к странице выбора операций с распределением
                 next = SELECT_OPERATION_FOR_DISTIBUTION_BY_COEFS_PAGE;
@@ -153,6 +157,50 @@ int main() {
                 test();
                 next = 0;
                 break;
+            case M_ESTIMATE_PAGE: {
+                cout << "Введите сначала данные для основного, потом для шумогого распредлений" << endl;
+                input_7_coefs(coefs);
+                GeneralDistribution g1(coefs[0], coefs[1], coefs[2]);
+                GeneralDistribution g2(coefs[3], coefs[4], coefs[5]);
+                MixDistribution<GeneralDistribution, GeneralDistribution> m(g1, g2, coefs[6]);
+                cout << "Введите объем выборки:" << endl;
+                int sample_volume = input_number(100, 500);
+                EmpiricDistribution e(m, sample_volume);
+
+                cout << "Введите параметр 'С':" << endl;
+                float c = input_number(0.f, 1000.f);
+
+                cout << "Введите параметр 'p' (количество шагов):" << endl;
+                int steps = input_number(1, 1000);
+
+                Estimate est(e, sqrt(g1.get_dispersion()), c, steps);
+                e.notify();
+                cout << "Теоритическое значение: " << g1.get_expectation() << endl;
+                cout << "М - оценка: " << est.get_mu() << endl;
+
+                cout << "Хотите увидеть графики?" << endl;
+                cout << "1) Да" << endl;
+                cout << "2) Сохранить в файл" << endl;
+                cout << "3) Нет" << endl;
+                int choice = input_number(1, 3);
+                if (choice < 3) {
+                    Plotter p;
+
+                    if (choice == 1) {
+                        p.show();
+                    } else {
+                        cout << "Введите имя файла:" << endl;
+                        string filename;
+                        cin >> filename;
+                        p.save(filename);
+                    }
+                }
+
+
+                next = 0;
+                break;
+            }
+
 
             case SELECT_OPERATION_FOR_DISTIBUTION_BY_COEFS_PAGE:
                 // Показ меню операций с распределением по коэффициентам

@@ -1,8 +1,11 @@
 #ifndef ESTIMATE_H
 #define ESTIMATE_H
 #include "../EmpiricDistribution/EmpiricDistribution.h"
+#include "vector"
 #define var 13
 #define degree (2 * (var-10))
+
+using namespace std;
 
 class Estimate : public IObserver {
     EmpiricDistribution &emperic_distribution;
@@ -10,6 +13,8 @@ class Estimate : public IObserver {
     double c;
     int p;
     double mu;
+    vector<vector<double>> roValues;
+    vector<vector<double>> zValues;
 
     void estimate();
 
@@ -29,6 +34,8 @@ public:
     double get_mu() {
         return mu;
     };
+
+    double ro(double x);
 
     double weight(double x) const; // функция для вычисления веса
     void update() override {

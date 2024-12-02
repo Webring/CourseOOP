@@ -24,3 +24,10 @@ void Estimate::estimate() {
         mu = numerator / denominator;
     }
 }
+
+double Estimate::ro(double z) {
+    if (abs(z) < c) {
+        return 1.0 / 9.0 * pow(z / c, 2) * (2 * pow(z / c, degree * 2) - 7 * pow(z / c, degree) + 14);
+    }
+    return 1;
+}
