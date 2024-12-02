@@ -36,6 +36,12 @@ public:
     };
 
     double ro(double x);
+    vector<vector<double>> get_ro() {
+        return roValues;
+    };
+    vector<vector<double>> get_z() {
+        return zValues;
+    }
 
     double weight(double x) const; // функция для вычисления веса
     void update() override {
