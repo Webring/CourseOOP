@@ -23,4 +23,5 @@ add_executable(oop
         interfaces.h
         Estimate/Estimate.cpp
         Estimate/Estimate.h
+        Plotter/Plotter.cpp
 )
