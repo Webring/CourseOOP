@@ -23,7 +23,6 @@ public:
                                                                                sigma(sigma0),
                                                                                c(c0),
                                                                                p(p0) {
-//        estimate();
         emperic_distribution.attach(this);
     }
 
@@ -38,8 +37,29 @@ public:
     vector<double> get_weight() {
         return weightValues;
     };
+    double get_sigma(){
+        return sigma;
+    };
+    double get_c(){
+        return c;
+    };
+    int pet_p(){
+        return p;
+    };
 
-    double weight(double x) const; // функция для вычисления веса
+    void set_sigma(double &sigma){
+        this->sigma = sigma;
+    };
+    void set_c(double &c){
+        this->c = c;
+    };
+    void set_p(int &p){
+        this->p = p;
+    };
+
+
+
+    double weight(double x) const;
     void update() override {
         estimate();
     }

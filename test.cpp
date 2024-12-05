@@ -11,7 +11,9 @@
 #include "Estimate/Estimate.h"
 
 void test() {
-    Plotter p;
+//    Plotter p;
+
+    /*
     double start = -10.0;
     double end = 10.0;
     double step = 0.01;
@@ -49,7 +51,7 @@ void test() {
     p.scatter(x_noised,y_noised, "График зашумлённого распределения");
     p.scatter(x,weights, "График весовой функции");
     p.show();
-    p.clearPlots();
+    */
 
     /*
     vector<double> c = {1.0,1.4,1.8,2.926,3.309,0.5,4.0,5.0,10.0};
@@ -69,8 +71,32 @@ void test() {
             }
         }
     }
-
     */
+
+    /*
+    vector<double> c;
+    int n = 500;
+    double p0 = 0.3;
+    vector<double> err;
+    GeneralDistribution GD(1,0,1);
+    for(int i = 1; i<=2000; i++){
+        c.push_back(2+0.001*i);
+    }
+//    for(int i = 1; i<=2500; i++){
+//        c.push_back(0.01*i);
+//    }
+    for(int k=0; k<c.size();k++){
+        MixDistribution<GeneralDistribution,GeneralDistribution> MD(1,0,1,6,4,8,p0);
+        EmpiricDistribution e(MD, n);
+        Estimate est(e, sqrt(GD.get_dispersion()), c[k]);
+        e.notify();
+        err.push_back(fabs(GD.get_mu() - est.get_mu()));
+    }
+    p.scatter(c,err, "График зависимости ошибки от параметра c");
+    p.show();
+    p.clearPlots();
+    */
+
 //    IDistribution *IDistr;
 //    cout << "-------------------------------------------------------------------------------" << endl;
 //    cout << "ТЕСТИРОВАНИЕ КЛАССА ОСНОВНОГО РАСПРЕДЕЛЕНИЯ" << endl;
